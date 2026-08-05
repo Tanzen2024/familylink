@@ -58,8 +58,10 @@ export default function Solidarite() {
             )
           })}
         </aside>
-        <div className="sol-content">
-          {renderPage()}
+        <div className="sol-content solidarite-content">
+          <div className="container">
+            {renderPage()}
+          </div>
         </div>
       </div>
     </ToastProvider>

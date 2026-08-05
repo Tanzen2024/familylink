@@ -1,6 +1,6 @@
 import {
   FolderKanban, Lightbulb, Hammer, CheckCircle2, Building2,
-  ArrowRight, TrendingUp, Users, ThumbsUp,
+  ArrowRight, TrendingUp, Users, ThumbsUp, MessageCircle, Vote,
 } from 'lucide-react'
 import { mockProjects, mockIdeas, mockHeritage } from '../mockData'
 import { formatMoney, formatMoneyShort, ProgressBar, ProjectStatusBadge } from '../ui'
@@ -43,13 +43,13 @@ export default function Dashboard({ onNavigate }: { onNavigate: (page: string) =
 
   // Lifecycle visualization
   const lifecycleSteps = [
-    { icon: '💡', label: 'Idée', done: true },
-    { icon: '💬', label: 'Discussion', done: true },
-    { icon: '🗳️', label: 'Vote', done: true },
-    { icon: '✅', label: 'Validation', done: true },
-    { icon: '🏗️', label: 'Projet', done: true },
-    { icon: '🚧', label: 'Réalisation', done: false, active: true },
-    { icon: '🏛️', label: 'Patrimoine', done: false },
+    { icon: Lightbulb, label: 'Idée', done: true },
+    { icon: MessageCircle, label: 'Discussion', done: true },
+    { icon: Vote, label: 'Vote', done: true },
+    { icon: CheckCircle2, label: 'Validation', done: true },
+    { icon: FolderKanban, label: 'Projet', done: true },
+    { icon: Hammer, label: 'Réalisation', done: false, active: true },
+    { icon: Building2, label: 'Patrimoine', done: false },
   ]
 
   return (
@@ -83,15 +83,18 @@ export default function Dashboard({ onNavigate }: { onNavigate: (page: string) =
       <div className="sol-chart" style={{ marginBottom: '1.5rem' }}>
         <h3>Cycle de vie des projets</h3>
         <div className="prj-lifecycle">
-          {lifecycleSteps.map((step, i) => (
-            <div key={i}>
-              <div className={`prj-lifecycle-step ${step.done ? 'done' : ''} ${step.active ? 'active' : ''}`}>
-                <div className="prj-lifecycle-icon">{step.icon}</div>
-                <div className="prj-lifecycle-label">{step.label}</div>
+          {lifecycleSteps.map((step, i) => {
+            const Icon = step.icon
+            return (
+              <div key={i}>
+                <div className={`prj-lifecycle-step ${step.done ? 'done' : ''} ${step.active ? 'active' : ''}`}>
+                  <div className="prj-lifecycle-icon"><Icon size={20} /></div>
+                  <div className="prj-lifecycle-label">{step.label}</div>
+                </div>
+                {i < lifecycleSteps.length - 1 && <div className="prj-lifecycle-arrow">↓</div>}
               </div>
-              {i < lifecycleSteps.length - 1 && <div className="prj-lifecycle-arrow">↓</div>}
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
 
@@ -126,34 +129,34 @@ export default function Dashboard({ onNavigate }: { onNavigate: (page: string) =
       {/* Budget overview + recent ideas */}
       <div className="grid-2">
         <div className="sol-chart">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+          <div className="sol-panel-header">
             <h3>Budget global</h3>
-            <button onClick={() => onNavigate('all')} style={{ background: 'none', border: 'none', color: 'var(--color-primary-600)', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+            <button className="sol-link-btn" onClick={() => onNavigate('all')}>
               Voir projets <ArrowRight size={14} />
             </button>
           </div>
-          <div style={{ padding: '1rem', background: 'var(--color-neutral-50)', borderRadius: 'var(--radius-sm)', marginBottom: '1rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-              <span style={{ fontSize: '0.85rem', color: 'var(--color-neutral-500)' }}>Budget total</span>
-              <span style={{ fontWeight: 700, fontSize: '0.95rem' }}>{formatMoney(totalBudget)}</span>
+          <div className="prj-budget-panel">
+            <div className="prj-budget-row">
+              <span className="prj-budget-label">Budget total</span>
+              <span className="prj-budget-value">{formatMoney(totalBudget)}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <span style={{ fontSize: '0.85rem', color: 'var(--color-neutral-500)' }}>Dépensé</span>
-              <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#991b1b' }}>{formatMoney(totalSpent)}</span>
+            <div className="prj-budget-row">
+              <span className="prj-budget-label">Dépensé</span>
+              <span className="prj-budget-value" style={{ color: '#991b1b' }}>{formatMoney(totalSpent)}</span>
             </div>
             <ProgressBar value={totalSpent} max={totalBudget} color="#f59e0b" />
-            <div style={{ fontSize: '0.8rem', color: 'var(--color-neutral-500)', marginTop: '0.25rem' }}>
+            <div className="prj-budget-meta">
               {totalBudget > 0 ? ((totalSpent / totalBudget) * 100).toFixed(1) : 0}% consommé
             </div>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <div className="sol-stack" style={{ gap: '0.5rem' }}>
             {mockProjects.slice(0, 4).map((p) => (
-              <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-neutral-200)' }}>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 500, fontSize: '0.85rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.title}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--color-neutral-500)' }}>{formatMoneyShort(p.spent)} / {formatMoneyShort(p.budget)}</div>
+              <div key={p.id} className="prj-mini-row">
+                <div className="prj-mini-body">
+                  <div className="prj-mini-title">{p.title}</div>
+                  <div className="prj-mini-meta">{formatMoneyShort(p.spent)} / {formatMoneyShort(p.budget)}</div>
                 </div>
-                <div style={{ width: 60 }}><ProgressBar value={p.spent} max={p.budget} color={p.progress >= 100 ? '#10b981' : '#f59e0b'} /></div>
+                <div className="prj-mini-progress"><ProgressBar value={p.spent} max={p.budget} color={p.progress >= 100 ? '#10b981' : '#f59e0b'} /></div>
                 <ProjectStatusBadge status={p.status} />
               </div>
             ))}
@@ -161,21 +164,21 @@ export default function Dashboard({ onNavigate }: { onNavigate: (page: string) =
         </div>
 
         <div className="sol-chart">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+          <div className="sol-panel-header">
             <h3>Dernières idées</h3>
-            <button onClick={() => onNavigate('idees')} style={{ background: 'none', border: 'none', color: 'var(--color-primary-600)', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+            <button className="sol-link-btn" onClick={() => onNavigate('idees')}>
               Voir tout <ArrowRight size={14} />
             </button>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <div className="sol-stack" style={{ gap: '0.5rem' }}>
             {idees.slice(0, 5).map((idea) => (
-              <div key={idea.id} style={{ padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-neutral-200)' }}>
-                <div style={{ fontWeight: 600, fontSize: '0.85rem', marginBottom: '0.25rem' }}>{idea.title}</div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--color-neutral-500)' }}>
+              <div key={idea.id} className="prj-idea-mini">
+                <div className="prj-idea-mini-title">{idea.title}</div>
+                <div className="prj-idea-mini-footer">
                   <span>{idea.author}</span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><Users size={12} /> {idea.supports}</span>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><ThumbsUp size={12} /> {idea.votes.favorable}</span>
+                  <span className="prj-idea-mini-stats">
+                    <span className="prj-idea-mini-stat"><Users size={12} /> {idea.supports}</span>
+                    <span className="prj-idea-mini-stat"><ThumbsUp size={12} /> {idea.votes.favorable}</span>
                   </span>
                 </div>
               </div>

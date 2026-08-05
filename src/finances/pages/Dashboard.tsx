@@ -1,14 +1,12 @@
 import {
   Wallet, Users, Gift, PiggyBank, TrendingDown, TrendingUp, ArrowRight,
-  CheckCircle2, AlertCircle, Banknote,
+  CheckCircle2, AlertCircle,
 } from 'lucide-react'
 import {
   mockContributions, mockDonations, mockFinCollections, mockExpenses,
   mockIncomes, mockAccounts, monthlyIncomeData, monthlyExpenseData,
 } from '../mockData'
-import { formatMoney, formatMoneyShort, ProgressBar } from '../ui'
-import type { IncomeOrigin, ExpenseCategory } from '../types'
-import { INCOME_ORIGIN_BADGES, EXPENSE_CATEGORY_BADGES } from '../types'
+import { formatMoney, formatMoneyShort } from '../ui'
 
 export default function Dashboard({ onNavigate }: { onNavigate: (page: string) => void }) {
   const totalBalance = mockAccounts.reduce((s, a) => s + a.balance, 0)
@@ -117,14 +115,14 @@ export default function Dashboard({ onNavigate }: { onNavigate: (page: string) =
       <div className="grid-2" style={{ marginBottom: '1.5rem' }}>
         <div className="sol-chart">
           <h3>Répartition des recettes</h3>
-          <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div className="fin-donut-row">
             <DonutChart data={incomeByOrigin} colors={incomeColors} centerLabel="Total" centerValue={formatMoneyShort(Object.values(incomeByOrigin).reduce((a, b) => a + b, 0))} />
-            <div className="fin-legend" style={{ flex: 1, minWidth: '180px' }}>
+            <div className="fin-legend">
               {Object.entries(incomeByOrigin).map(([key, val]) => (
                 <div key={key} className="fin-legend-item">
                   <div className="fin-legend-dot" style={{ background: incomeColors[key] }} />
-                  <span style={{ flex: 1 }}>{key}</span>
-                  <span style={{ fontWeight: 600 }}>{formatMoneyShort(val)}</span>
+                  <span className="fin-legend-label">{key}</span>
+                  <span className="fin-legend-value">{formatMoneyShort(val)}</span>
                 </div>
               ))}
             </div>
@@ -132,14 +130,14 @@ export default function Dashboard({ onNavigate }: { onNavigate: (page: string) =
         </div>
         <div className="sol-chart">
           <h3>Répartition des dépenses</h3>
-          <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div className="fin-donut-row">
             <DonutChart data={expenseByCategory} colors={expenseColors} centerLabel="Total" centerValue={formatMoneyShort(Object.values(expenseByCategory).reduce((a, b) => a + b, 0))} />
-            <div className="fin-legend" style={{ flex: 1, minWidth: '180px' }}>
+            <div className="fin-legend">
               {Object.entries(expenseByCategory).map(([key, val]) => (
                 <div key={key} className="fin-legend-item">
                   <div className="fin-legend-dot" style={{ background: expenseColors[key] }} />
-                  <span style={{ flex: 1 }}>{key}</span>
-                  <span style={{ fontWeight: 600 }}>{formatMoneyShort(val)}</span>
+                  <span className="fin-legend-label">{key}</span>
+                  <span className="fin-legend-value">{formatMoneyShort(val)}</span>
                 </div>
               ))}
             </div>
@@ -162,23 +160,29 @@ export default function Dashboard({ onNavigate }: { onNavigate: (page: string) =
           </div>
         </div>
         <div className="sol-chart">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+          <div className="sol-panel-header">
             <h3>Dernières opérations</h3>
-            <button onClick={() => onNavigate('recettes')} style={{ background: 'none', border: 'none', color: 'var(--color-primary-600)', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+            <button className="sol-link-btn" onClick={() => onNavigate('recettes')}>
               Voir tout <ArrowRight size={14} />
             </button>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <div className="sol-stack" style={{ gap: '0.5rem' }}>
             {recentOps.map((op) => (
-              <div key={op.id} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-neutral-200)' }}>
-                <div style={{ width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: op.opType === 'credit' ? '#d1fae5' : '#fee2e2', color: op.opType === 'credit' ? '#065f46' : '#991b1b' }}>
+              <div key={op.id} className="fin-op-item">
+                <div
+                  className="fin-op-icon"
+                  style={{
+                    background: op.opType === 'credit' ? '#d1fae5' : '#fee2e2',
+                    color: op.opType === 'credit' ? '#065f46' : '#991b1b',
+                  }}
+                >
                   {op.opType === 'credit' ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
                 </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 500, fontSize: '0.85rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{op.label}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--color-neutral-500)' }}>{new Date(op.date).toLocaleDateString('fr-FR')}</div>
+                <div className="fin-op-body">
+                  <div className="fin-op-label">{op.label}</div>
+                  <div className="fin-op-date">{new Date(op.date).toLocaleDateString('fr-FR')}</div>
                 </div>
-                <div style={{ fontWeight: 700, fontSize: '0.85rem', color: op.opType === 'credit' ? '#065f46' : '#991b1b', whiteSpace: 'nowrap' }}>
+                <div className="fin-op-amount" style={{ color: op.opType === 'credit' ? '#065f46' : '#991b1b' }}>
                   {op.opType === 'credit' ? '+' : '-'}{formatMoneyShort(op.amount)}
                 </div>
               </div>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { CalendarDays, Video, Newspaper } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import type { NewsItem } from '../lib/types'
 
@@ -19,12 +20,13 @@ export default function News() {
 
   if (selected) {
     return (
-      <div className="container">
+      <div className="container news-page">
         <button className="back-link" onClick={() => setSelected(null)}>← Retour aux actualités</button>
         <article className="news-detail">
           {selected.photo_url && <img src={selected.photo_url} alt={selected.title} className="news-detail-photo" />}
           <h1>{selected.title}</h1>
           <div className="news-meta">
+            <CalendarDays size={15} />
             Publié le {new Date(selected.published_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
           </div>
           {selected.video_url && (
@@ -39,12 +41,13 @@ export default function News() {
   }
 
   return (
-    <div className="container">
+    <div className="container news-page">
       <h1 className="page-title">Actualités</h1>
       <p className="page-subtitle">Les dernières annonces de l'association</p>
 
       {news.length === 0 ? (
         <div className="empty-state">
+          <Newspaper size={28} strokeWidth={1.5} />
           <p>Aucune actualité pour le moment.</p>
         </div>
       ) : (
@@ -54,12 +57,13 @@ export default function News() {
               {n.photo_url && <img src={n.photo_url} alt={n.title} className="news-card-photo" />}
               <div className="news-card-body">
                 <div className="news-date">
+                  <CalendarDays size={13} />
                   {new Date(n.published_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
                 </div>
                 <div className="news-card-title">{n.title}</div>
                 <p className="news-card-excerpt">{n.content.slice(0, 150)}…</p>
                 {n.video_url && (
-                  <span className="badge badge-green" style={{ marginTop: '0.5rem' }}>🎬 Vidéo</span>
+                  <span className="badge badge-green news-video-badge"><Video size={12} /> Vidéo</span>
                 )}
               </div>
             </div>

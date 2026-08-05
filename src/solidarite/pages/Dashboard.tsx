@@ -28,6 +28,13 @@ export default function Dashboard({ onNavigate }: { onNavigate: (page: string) =
     { label: 'Total collecté', value: formatMoney(totalCollected), icon: TrendingUp, bg: '#fce7f3', color: '#9d174d' },
   ]
 
+  const upcomingEvents = [
+    { date: '01/08/2025', label: 'Inhumation - Papa Samuel Menthong', loc: 'Douala' },
+    { date: '15/09/2025', label: 'Mariage Suzanne & Marc', loc: 'Bafoussam' },
+    { date: '20/09/2025', label: 'Réunion générale trimestrielle', loc: 'Yaoundé' },
+    { date: '05/10/2025', label: 'Carnaval culturel Menthong', loc: 'Bafoussam' },
+  ]
+
   return (
     <div>
       <div className="sol-page-header">
@@ -37,7 +44,6 @@ export default function Dashboard({ onNavigate }: { onNavigate: (page: string) =
         </div>
       </div>
 
-      {/* KPIs */}
       <div className="grid-4" style={{ marginBottom: '1.5rem' }}>
         {kpis.map((kpi) => {
           const Icon = kpi.icon
@@ -55,7 +61,6 @@ export default function Dashboard({ onNavigate }: { onNavigate: (page: string) =
         })}
       </div>
 
-      {/* Chart + upcoming events */}
       <div className="grid-2" style={{ marginBottom: '1.5rem' }}>
         <div className="sol-chart">
           <h3>Demandes par mois (2025)</h3>
@@ -72,20 +77,15 @@ export default function Dashboard({ onNavigate }: { onNavigate: (page: string) =
 
         <div className="sol-chart">
           <h3>Prochains événements</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {[
-              { date: '01/08/2025', label: 'Inhumation - Papa Samuel Menthong', loc: 'Douala' },
-              { date: '15/09/2025', label: 'Mariage Suzanne & Marc', loc: 'Bafoussam' },
-              { date: '20/09/2025', label: 'Réunion générale trimestrielle', loc: 'Yaoundé' },
-              { date: '05/10/2025', label: 'Carnaval culturel Menthong', loc: 'Bafoussam' },
-            ].map((ev, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem', borderRadius: 'var(--radius-sm)', background: 'var(--color-neutral-50)' }}>
-                <div style={{ width: 48, height: 48, borderRadius: 'var(--radius-sm)', background: 'var(--color-primary-100)', color: 'var(--color-primary-700)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <div className="sol-stack">
+            {upcomingEvents.map((ev, i) => (
+              <div key={i} className="sol-event-item">
+                <div className="sol-event-icon">
                   <Calendar size={20} />
                 </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--color-neutral-900)' }}>{ev.label}</div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--color-neutral-500)' }}>{ev.date} - {ev.loc}</div>
+                <div>
+                  <div className="sol-event-title">{ev.label}</div>
+                  <div className="sol-event-meta">{ev.date} - {ev.loc}</div>
                 </div>
               </div>
             ))}
@@ -93,25 +93,22 @@ export default function Dashboard({ onNavigate }: { onNavigate: (page: string) =
         </div>
       </div>
 
-      {/* Recent requests + recent aids */}
       <div className="grid-2">
         <div className="sol-chart">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+          <div className="sol-panel-header">
             <h3>Dernières demandes</h3>
-            <button onClick={() => onNavigate('demandes')} style={{ background: 'none', border: 'none', color: 'var(--color-primary-600)', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+            <button className="sol-link-btn" onClick={() => onNavigate('demandes')}>
               Voir tout <ArrowRight size={14} />
             </button>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div className="sol-stack">
             {recentRequests.map((r) => (
-              <div key={r.id} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-neutral-200)' }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 600, fontSize: '0.875rem', marginBottom: '0.25rem' }}>{r.title}</div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--color-neutral-500)', marginBottom: '0.5rem' }}>{r.number} - {r.author}</div>
-                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                    <CategoryBadge category={r.category} />
-                    <StatusBadge status={r.status} />
-                  </div>
+              <div key={r.id} className="sol-list-item">
+                <div className="sol-list-item-title">{r.title}</div>
+                <div className="sol-list-item-meta">{r.number} - {r.author}</div>
+                <div className="sol-list-item-tags">
+                  <CategoryBadge category={r.category} />
+                  <StatusBadge status={r.status} />
                 </div>
               </div>
             ))}
@@ -119,33 +116,32 @@ export default function Dashboard({ onNavigate }: { onNavigate: (page: string) =
         </div>
 
         <div className="sol-chart">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+          <div className="sol-panel-header">
             <h3>Dernières aides accordées</h3>
-            <button onClick={() => onNavigate('historique')} style={{ background: 'none', border: 'none', color: 'var(--color-primary-600)', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+            <button className="sol-link-btn" onClick={() => onNavigate('historique')}>
               Voir tout <ArrowRight size={14} />
             </button>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div className="sol-stack">
             {recentAids.map((h) => (
-              <div key={h.id} style={{ padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-neutral-200)' }}>
-                <div style={{ fontWeight: 600, fontSize: '0.875rem', marginBottom: '0.25rem' }}>{h.title}</div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--color-neutral-500)' }}>{h.date} - par {h.actor}</div>
+              <div key={h.id} className="sol-list-item">
+                <div className="sol-list-item-title">{h.title}</div>
+                <div className="sol-list-item-meta" style={{ marginBottom: 0 }}>{h.date} - par {h.actor}</div>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Active collections summary */}
       <div style={{ marginTop: '1.5rem' }}>
         <div className="sol-chart">
           <h3>Collectes en cours</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div className="sol-stack sol-stack-lg">
             {mockCollections.filter((c) => c.collectedAmount < c.targetAmount).map((c) => (
               <div key={c.id}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                  <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>{c.title}</span>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--color-neutral-500)' }}>{formatMoney(c.collectedAmount)} / {formatMoney(c.targetAmount)}</span>
+                <div className="sol-collect-row">
+                  <span className="sol-collect-title">{c.title}</span>
+                  <span className="sol-collect-amount">{formatMoney(c.collectedAmount)} / {formatMoney(c.targetAmount)}</span>
                 </div>
                 <ProgressBar value={c.collectedAmount} max={c.targetAmount} />
               </div>
