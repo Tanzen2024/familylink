@@ -1115,16 +1115,61 @@ button:focus-visible,
 }
 
 .event-date {
-  font-size: 0.8rem;
-  color: var(--color-primary-600);
-  font-weight: 500;
-  margin-bottom: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  align-self: flex-start;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
 }
 
 .event-location {
-  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
   color: var(--color-neutral-500);
-  margin-top: 0.5rem;
+  margin-top: 0.625rem;
+}
+
+/* ===== Événements (scoped to .events-page) ===== */
+
+.events-page .event-card {
+  transition: box-shadow var(--transition-fast), transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.events-page .event-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+  border-color: var(--color-neutral-300);
+}
+
+.events-page .event-card-photo {
+  height: 240px;
+}
+
+.events-page .video-wrapper {
+  border: 1px solid var(--color-neutral-200);
+  box-shadow: var(--shadow-xs);
+}
+
+.events-page .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--color-neutral-50);
+  border: 1px dashed var(--color-neutral-300);
+  border-radius: var(--radius-md);
+}
+
+.events-page .empty-state svg {
+  color: var(--color-neutral-300);
 }
 
 .news-date {
