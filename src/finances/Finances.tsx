@@ -38,29 +38,31 @@ export default function Finances() {
 
   return (
     <ToastProvider>
-      <div className="sol-layout">
-      <aside className="sol-sidebar">
-        <div className="sol-sidebar-title">
-          <Landmark size={22} />
-          <span>Finances</span>
-        </div>
-        {FIN_SUB_PAGES.map((page) => {
-          const Icon = page.icon
-          return (
-            <div
-              key={page.id}
-              className={`sol-nav-item ${activePage === page.id ? 'active' : ''}`}
-              onClick={() => setActivePage(page.id)}
-            >
-              <Icon size={18} />
-              <span>{page.label}</span>
+      <div className="container finances">
+        <div className="sol-layout">
+          <aside className="sol-sidebar">
+            <div className="sol-sidebar-title">
+              <Landmark size={22} />
+              <span>Finances</span>
             </div>
-          )
-        })}
-      </aside>
-      <div className="sol-content">
-        {renderPage()}
-      </div>
+            {FIN_SUB_PAGES.map((page) => {
+              const Icon = page.icon
+              return (
+                <div
+                  key={page.id}
+                  className={`sol-nav-item ${activePage === page.id ? 'active' : ''}`}
+                  onClick={() => setActivePage(page.id)}
+                >
+                  <Icon size={18} />
+                  <span>{page.label}</span>
+                </div>
+              )
+            })}
+          </aside>
+          <div className="sol-content">
+            {renderPage()}
+          </div>
+        </div>
       </div>
     </ToastProvider>
   )

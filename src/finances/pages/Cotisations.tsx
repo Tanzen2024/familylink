@@ -2,10 +2,9 @@ import { useState, useMemo } from 'react'
 import { Plus, Search, Bell, CheckCircle2, Clock } from 'lucide-react'
 import { mockContributions } from '../mockData'
 import { useToast } from '../toast'
-import { Modal, ContributionStatusBadge, formatMoney, ProgressBar, EmptyState } from '../ui'
-import type { Contribution, ContributionStatus, PaymentMethod } from '../types'
+import { Modal, ContributionStatusBadge, formatMoney, EmptyState, KpiCard } from '../ui'
+import type { Contribution, ContributionStatus } from '../types'
 
-const METHODS: PaymentMethod[] = ['Mobile Money', 'Orange Money', 'MTN MoMo', 'Banque', 'Espèces', 'Chèque']
 const STATUSES: ContributionStatus[] = ['En attente', 'Partiellement payé', 'Payé', 'En retard']
 
 export default function Cotisations() {
@@ -55,22 +54,10 @@ export default function Cotisations() {
 
       {/* Summary KPIs */}
       <div className="grid-4" style={{ marginBottom: '1.5rem' }}>
-        <div className="sol-kpi">
-          <div className="sol-kpi-icon" style={{ background: '#dbeafe', color: '#1e40af' }}><Clock size={24} /></div>
-          <div><div className="sol-kpi-value">{formatMoney(totalExpected)}</div><div className="sol-kpi-label">Montant attendu</div></div>
-        </div>
-        <div className="sol-kpi">
-          <div className="sol-kpi-icon" style={{ background: '#d1fae5', color: '#065f46' }}><CheckCircle2 size={24} /></div>
-          <div><div className="sol-kpi-value">{formatMoney(totalPaid)}</div><div className="sol-kpi-label">Montant payé</div></div>
-        </div>
-        <div className="sol-kpi">
-          <div className="sol-kpi-icon" style={{ background: '#d1fae5', color: '#065f46' }}><CheckCircle2 size={24} /></div>
-          <div><div className="sol-kpi-value">{paidCount}</div><div className="sol-kpi-label">Membres à jour</div></div>
-        </div>
-        <div className="sol-kpi">
-          <div className="sol-kpi-icon" style={{ background: '#fee2e2', color: '#991b1b' }}><Clock size={24} /></div>
-          <div><div className="sol-kpi-value">{lateCount}</div><div className="sol-kpi-label">Membres en retard</div></div>
-        </div>
+        <KpiCard icon={Clock} label="Montant attendu" value={formatMoney(totalExpected)} bg="#dbeafe" color="#1e40af" />
+        <KpiCard icon={CheckCircle2} label="Montant payé" value={formatMoney(totalPaid)} bg="#d1fae5" color="#065f46" />
+        <KpiCard icon={CheckCircle2} label="Membres à jour" value={String(paidCount)} bg="#d1fae5" color="#065f46" />
+        <KpiCard icon={Clock} label="Membres en retard" value={String(lateCount)} bg="#fee2e2" color="#991b1b" />
       </div>
 
       <div className="sol-filters">
@@ -87,7 +74,7 @@ export default function Cotisations() {
       </div>
 
       {filtered.length === 0 ? <EmptyState message="Aucune cotisation ne correspond à vos filtres." /> : (
-        <div className="sol-chart" style={{ padding: 0, overflow: 'hidden' }}>
+        <div className="sol-chart sol-chart-flush">
           <table className="sol-table">
             <thead>
               <tr><th>Numéro</th><th>Membre</th><th>Exercice</th><th>Attendu</th><th>Payé</th><th>Solde</th><th>Échéance</th><th>Paiement</th><th>Statut</th><th>Actions</th></tr>

@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Search, CreditCard, FileText, CheckCircle2, XCircle, Clock } from 'lucide-react'
 import { mockPayments } from '../mockData'
-import { PaymentStatusBadge, formatMoney, EmptyState } from '../ui'
+import { PaymentStatusBadge, formatMoney, EmptyState, KpiCard } from '../ui'
 import type { PaymentStatus } from '../types'
 
 const STATUSES: PaymentStatus[] = ['En attente', 'Effectué', 'Rejeté']
@@ -35,18 +35,9 @@ export default function Paiements() {
       </div>
 
       <div className="grid-3" style={{ marginBottom: '1.5rem' }}>
-        <div className="sol-kpi" style={{ cursor: 'pointer' }} onClick={() => setTab('Effectué')}>
-          <div className="sol-kpi-icon" style={{ background: '#d1fae5', color: '#065f46' }}><CheckCircle2 size={24} /></div>
-          <div><div className="sol-kpi-value">{counts['Effectué']}</div><div className="sol-kpi-label">Paiements effectués</div></div>
-        </div>
-        <div className="sol-kpi" style={{ cursor: 'pointer' }} onClick={() => setTab('En attente')}>
-          <div className="sol-kpi-icon" style={{ background: '#fef3c7', color: '#92400e' }}><Clock size={24} /></div>
-          <div><div className="sol-kpi-value">{counts['En attente']}</div><div className="sol-kpi-label">Paiements en attente</div></div>
-        </div>
-        <div className="sol-kpi" style={{ cursor: 'pointer' }} onClick={() => setTab('Rejeté')}>
-          <div className="sol-kpi-icon" style={{ background: '#fee2e2', color: '#991b1b' }}><XCircle size={24} /></div>
-          <div><div className="sol-kpi-value">{counts['Rejeté']}</div><div className="sol-kpi-label">Paiements rejetés</div></div>
-        </div>
+        <KpiCard icon={CheckCircle2} label="Paiements effectués" value={String(counts['Effectué'])} bg="#d1fae5" color="#065f46" onClick={() => setTab('Effectué')} />
+        <KpiCard icon={Clock} label="Paiements en attente" value={String(counts['En attente'])} bg="#fef3c7" color="#92400e" onClick={() => setTab('En attente')} />
+        <KpiCard icon={XCircle} label="Paiements rejetés" value={String(counts['Rejeté'])} bg="#fee2e2" color="#991b1b" onClick={() => setTab('Rejeté')} />
       </div>
 
       <div className="sol-tabs">
@@ -70,7 +61,7 @@ export default function Paiements() {
       </div>
 
       {filtered.length === 0 ? <EmptyState message="Aucun paiement ne correspond à vos filtres." /> : (
-        <div className="sol-chart" style={{ padding: 0, overflow: 'hidden' }}>
+        <div className="sol-chart sol-chart-flush">
           <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--color-neutral-200)', fontWeight: 600, fontSize: '0.9rem', display: 'flex', justifyContent: 'space-between' }}>
             <span>{filtered.length} paiement(s)</span>
             <span>Total: {formatMoney(total)}</span>

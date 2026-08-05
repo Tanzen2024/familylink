@@ -38,28 +38,28 @@ export default function Solidarite() {
 
   return (
     <ToastProvider>
-      <div className="sol-layout">
-        <aside className="sol-sidebar">
-          <div className="sol-sidebar-title">
-            <HeartHandshake size={22} />
-            <span>Solidarité</span>
-          </div>
-          {SUB_PAGES.map((page) => {
-            const Icon = page.icon
-            return (
-              <div
-                key={page.id}
-                className={`sol-nav-item ${activePage === page.id ? 'active' : ''}`}
-                onClick={() => setActivePage(page.id)}
-              >
-                <Icon size={18} />
-                <span>{page.label}</span>
-              </div>
-            )
-          })}
-        </aside>
-        <div className="sol-content solidarite-content">
-          <div className="container">
+      <div className="container">
+        <div className="sol-layout">
+          <aside className="sol-sidebar">
+            <div className="sol-sidebar-title">
+              <HeartHandshake size={22} />
+              <span>Solidarité</span>
+            </div>
+            {SUB_PAGES.map((page) => {
+              const Icon = page.icon
+              return (
+                <div
+                  key={page.id}
+                  className={`sol-nav-item ${activePage === page.id ? 'active' : ''}`}
+                  onClick={() => setActivePage(page.id)}
+                >
+                  <Icon size={18} />
+                  <span>{page.label}</span>
+                </div>
+              )
+            })}
+          </aside>
+          <div className="sol-content">
             {renderPage()}
           </div>
         </div>

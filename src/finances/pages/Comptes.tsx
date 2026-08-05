@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Landmark, ArrowDownCircle, ArrowUpCircle, Plus, Phone } from 'lucide-react'
 import { mockAccounts } from '../mockData'
 import { useToast } from '../toast'
-import { Modal, formatMoney, EmptyState } from '../ui'
+import { Modal, formatMoney, EmptyState, KpiCard } from '../ui'
 import type { BankAccount, AccountType } from '../types'
 
 export default function Comptes() {
@@ -36,10 +36,14 @@ export default function Comptes() {
         </button>
       </div>
 
-      <div className="sol-kpi" style={{ marginBottom: '1.5rem', maxWidth: '300px' }}>
-        <div className="sol-kpi-icon" style={{ background: '#dbeafe', color: '#1e40af' }}><Landmark size={24} /></div>
-        <div><div className="sol-kpi-value">{formatMoney(totalBalance)}</div><div className="sol-kpi-label">Solde total</div></div>
-      </div>
+      <KpiCard
+        icon={Landmark}
+        label="Solde total"
+        value={formatMoney(totalBalance)}
+        bg="#dbeafe"
+        color="#1e40af"
+        style={{ marginBottom: '1.5rem', maxWidth: '300px' }}
+      />
 
       {accounts.length === 0 ? <EmptyState message="Aucun compte enregistré." /> : (
         <div className="grid-2">

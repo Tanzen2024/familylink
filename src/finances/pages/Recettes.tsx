@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Search, TrendingUp } from 'lucide-react'
 import { mockIncomes } from '../mockData'
-import { IncomeOriginBadge, formatMoney, EmptyState } from '../ui'
+import { IncomeOriginBadge, formatMoney, EmptyState, KpiCard } from '../ui'
 import type { IncomeOrigin } from '../types'
 
 const ORIGINS: IncomeOrigin[] = ['Cotisations', 'Dons', 'Collectes', 'Subventions', 'Revenus des projets', 'Autres recettes']
@@ -32,13 +32,15 @@ export default function Recettes() {
 
       <div className="grid-3" style={{ marginBottom: '1.5rem' }}>
         {ORIGINS.map((origin) => (
-          <div key={origin} className="sol-kpi" style={{ cursor: 'pointer' }} onClick={() => setFOrigin(fOrigin === origin ? '' : origin)}>
-            <div className="sol-kpi-icon" style={{ background: '#d1fae5', color: '#065f46' }}><TrendingUp size={20} /></div>
-            <div>
-              <div className="sol-kpi-value" style={{ fontSize: '1.1rem' }}>{formatMoney(byOrigin[origin] || 0)}</div>
-              <div className="sol-kpi-label">{origin}</div>
-            </div>
-          </div>
+          <KpiCard
+            key={origin}
+            icon={TrendingUp}
+            label={origin}
+            value={formatMoney(byOrigin[origin] || 0)}
+            bg="#d1fae5"
+            color="#065f46"
+            onClick={() => setFOrigin(fOrigin === origin ? '' : origin)}
+          />
         ))}
       </div>
 
@@ -56,7 +58,7 @@ export default function Recettes() {
       </div>
 
       {filtered.length === 0 ? <EmptyState message="Aucune recette ne correspond à vos filtres." /> : (
-        <div className="sol-chart" style={{ padding: 0, overflow: 'hidden' }}>
+        <div className="sol-chart sol-chart-flush">
           <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--color-neutral-200)', fontWeight: 600, fontSize: '0.9rem', display: 'flex', justifyContent: 'space-between' }}>
             <span>{filtered.length} recette(s)</span>
             <span style={{ color: '#065f46' }}>Total: {formatMoney(total)}</span>

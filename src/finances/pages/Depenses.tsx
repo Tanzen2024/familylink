@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react'
 import { Plus, Search, TrendingDown, CheckCircle2, XCircle, Paperclip } from 'lucide-react'
 import { mockExpenses } from '../mockData'
 import { useToast } from '../toast'
-import { Modal, ExpenseCategoryBadge, formatMoney, EmptyState } from '../ui'
+import { Modal, ExpenseCategoryBadge, formatMoney, EmptyState, KpiCard } from '../ui'
 import type { Expense, ExpenseCategory } from '../types'
 
 const CATEGORIES: ExpenseCategory[] = ['Solidarité', 'Projet', 'Fonctionnement', 'Communication', 'Formation', 'Événements', 'Administration']
@@ -58,18 +58,9 @@ export default function Depenses() {
       </div>
 
       <div className="grid-3" style={{ marginBottom: '1.5rem' }}>
-        <div className="sol-kpi">
-          <div className="sol-kpi-icon" style={{ background: '#fee2e2', color: '#991b1b' }}><TrendingDown size={24} /></div>
-          <div><div className="sol-kpi-value" style={{ fontSize: '1.25rem' }}>{formatMoney(total)}</div><div className="sol-kpi-label">Total filtré</div></div>
-        </div>
-        <div className="sol-kpi">
-          <div className="sol-kpi-icon" style={{ background: '#d1fae5', color: '#065f46' }}><CheckCircle2 size={24} /></div>
-          <div><div className="sol-kpi-value" style={{ fontSize: '1.25rem' }}>{formatMoney(validatedTotal)}</div><div className="sol-kpi-label">Dépenses validées</div></div>
-        </div>
-        <div className="sol-kpi">
-          <div className="sol-kpi-icon" style={{ background: '#fef3c7', color: '#92400e' }}><XCircle size={24} /></div>
-          <div><div className="sol-kpi-value">{pendingCount}</div><div className="sol-kpi-label">En attente de validation</div></div>
-        </div>
+        <KpiCard icon={TrendingDown} label="Total filtré" value={formatMoney(total)} bg="#fee2e2" color="#991b1b" />
+        <KpiCard icon={CheckCircle2} label="Dépenses validées" value={formatMoney(validatedTotal)} bg="#d1fae5" color="#065f46" />
+        <KpiCard icon={XCircle} label="En attente de validation" value={String(pendingCount)} bg="#fef3c7" color="#92400e" />
       </div>
 
       <div className="sol-filters">
@@ -91,7 +82,7 @@ export default function Depenses() {
       </div>
 
       {filtered.length === 0 ? <EmptyState message="Aucune dépense ne correspond à vos filtres." /> : (
-        <div className="sol-chart" style={{ padding: 0, overflow: 'hidden' }}>
+        <div className="sol-chart sol-chart-flush">
           <table className="sol-table">
             <thead><tr><th>Référence</th><th>Catégorie</th><th>Projet</th><th>Bénéficiaire</th><th>Montant</th><th>Date</th><th>Justificatif</th><th>Validation</th><th>Action</th></tr></thead>
             <tbody>

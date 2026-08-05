@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react'
-import { X } from 'lucide-react'
+import type { CSSProperties, ReactNode } from 'react'
+import { X, type LucideIcon } from 'lucide-react'
 import type { ContributionStatus, PaymentStatus, IncomeOrigin, ExpenseCategory } from './types'
 import {
   CONTRIBUTION_STATUS_BADGES, PAYMENT_STATUS_BADGES,
@@ -56,6 +56,54 @@ export function ProgressBar({ value, max, color }: { value: number; max: number;
 
 export function EmptyState({ message }: { message: string }) {
   return <div className="empty-state"><p>{message}</p></div>
+}
+
+// Un montant financier peut aller de "0 FCFA" à "1 250 000 000 FCFA" (voire plus).
+// Cette échelle réduit progressivement la police à mesure que le texte s'allonge,
+// pour qu'il reste toujours entièrement visible dans la carte KPI sans jamais dépendre
+// d'un seul palier binaire (source du débordement précédent sur les valeurs à 14-16 caractères).
+function kpiValueSizeClass(value: string): string {
+  if (value.length > 20) return 'sol-kpi-value-xs'
+  if (value.length > 16) return 'sol-kpi-value-sm'
+  if (value.length > 12) return 'sol-kpi-value-md'
+  return ''
+}
+
+/**
+ * Carte KPI standard du module Finances : icône teintée + valeur (police
+ * auto-adaptative) + libellé. `onClick` optionnel rend la carte activable
+ * (bouton natif, focus clavier) ; sans `onClick`, simple carte statique.
+ */
+export function KpiCard({ icon: Icon, label, value, bg, color, onClick, style }: {
+  icon: LucideIcon
+  label: string
+  value: string
+  bg: string
+  color: string
+  onClick?: () => void
+  style?: CSSProperties
+}) {
+  const inner = (
+    <>
+      <div className="sol-kpi-icon" style={{ background: bg, color }} aria-hidden="true">
+        <Icon size={24} />
+      </div>
+      <div>
+        <div className={`sol-kpi-value ${kpiValueSizeClass(value)}`}>{value}</div>
+        <div className="sol-kpi-label">{label}</div>
+      </div>
+    </>
+  )
+
+  if (onClick) {
+    return (
+      <button className="sol-kpi" style={style} onClick={onClick} aria-label={`${label} : ${value}`}>
+        {inner}
+      </button>
+    )
+  }
+
+  return <div className="sol-kpi" style={style}>{inner}</div>
 }
 
 export function formatMoney(amount: number): string {

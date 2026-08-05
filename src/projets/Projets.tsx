@@ -34,28 +34,30 @@ export default function Projets() {
 
   return (
     <ToastProvider>
-      <div className="sol-layout">
-        <aside className="sol-sidebar">
-          <div className="sol-sidebar-title">
-            <FolderKanban size={22} />
-            <span>Projets</span>
+      <div className="container">
+        <div className="sol-layout">
+          <aside className="sol-sidebar">
+            <div className="sol-sidebar-title">
+              <FolderKanban size={22} />
+              <span>Projets</span>
+            </div>
+            {PROJETS_SUB_PAGES.map((page) => {
+              const Icon = page.icon
+              return (
+                <div
+                  key={page.id}
+                  className={`sol-nav-item ${activePage === page.id ? 'active' : ''}`}
+                  onClick={() => setActivePage(page.id)}
+                >
+                  <Icon size={18} />
+                  <span>{page.label}</span>
+                </div>
+              )
+            })}
+          </aside>
+          <div className="sol-content">
+            {renderPage()}
           </div>
-          {PROJETS_SUB_PAGES.map((page) => {
-            const Icon = page.icon
-            return (
-              <div
-                key={page.id}
-                className={`sol-nav-item ${activePage === page.id ? 'active' : ''}`}
-                onClick={() => setActivePage(page.id)}
-              >
-                <Icon size={18} />
-                <span>{page.label}</span>
-              </div>
-            )
-          })}
-        </aside>
-        <div className="sol-content">
-          {renderPage()}
         </div>
       </div>
     </ToastProvider>

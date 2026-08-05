@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Plus, Wallet, TrendingDown } from 'lucide-react'
 import { mockBudgets } from '../mockData'
 import { useToast } from '../toast'
-import { Modal, ProgressBar, formatMoney, EmptyState } from '../ui'
+import { Modal, ProgressBar, formatMoney, EmptyState, KpiCard } from '../ui'
 import type { Budget } from '../types'
 
 export default function Budgets() {
@@ -34,18 +34,9 @@ export default function Budgets() {
       </div>
 
       <div className="grid-3" style={{ marginBottom: '1.5rem' }}>
-        <div className="sol-kpi">
-          <div className="sol-kpi-icon" style={{ background: '#dbeafe', color: '#1e40af' }}><Wallet size={24} /></div>
-          <div><div className="sol-kpi-value" style={{ fontSize: '1.25rem' }}>{formatMoney(totalPlanned)}</div><div className="sol-kpi-label">Total prévu</div></div>
-        </div>
-        <div className="sol-kpi">
-          <div className="sol-kpi-icon" style={{ background: '#fee2e2', color: '#991b1b' }}><TrendingDown size={24} /></div>
-          <div><div className="sol-kpi-value" style={{ fontSize: '1.25rem' }}>{formatMoney(totalSpent)}</div><div className="sol-kpi-label">Total dépensé</div></div>
-        </div>
-        <div className="sol-kpi">
-          <div className="sol-kpi-icon" style={{ background: '#d1fae5', color: '#065f46' }}><Wallet size={24} /></div>
-          <div><div className="sol-kpi-value" style={{ fontSize: '1.25rem' }}>{formatMoney(totalBalance)}</div><div className="sol-kpi-label">Solde disponible</div></div>
-        </div>
+        <KpiCard icon={Wallet} label="Total prévu" value={formatMoney(totalPlanned)} bg="#dbeafe" color="#1e40af" />
+        <KpiCard icon={TrendingDown} label="Total dépensé" value={formatMoney(totalSpent)} bg="#fee2e2" color="#991b1b" />
+        <KpiCard icon={Wallet} label="Solde disponible" value={formatMoney(totalBalance)} bg="#d1fae5" color="#065f46" />
       </div>
 
       {budgets.length === 0 ? <EmptyState message="Aucun budget défini." /> : (

@@ -1817,11 +1817,6 @@ button:focus-visible,
   overflow-x: hidden;
 }
 
-.sol-content.solidarite-content {
-  padding-left: 0;
-  padding-right: 0;
-}
-
 .sol-content .card {
   transition: box-shadow var(--transition-fast), transform var(--transition-fast), border-color var(--transition-fast);
 }
@@ -2429,6 +2424,64 @@ button:focus-visible,
 }
 
 /* ===== Finances Module additions ===== */
+.finances {
+  /* Teintes bg/texte du Tableau de bord (KPI, opérations récentes) — centralisées
+     ici pour éviter de répéter les mêmes hex à chaque usage dans le JSX. */
+  --fin-blue-bg: #dbeafe;
+  --fin-blue: #1e40af;
+  --fin-green-bg: #d1fae5;
+  --fin-green: #065f46;
+  --fin-pink-bg: #fce7f3;
+  --fin-pink: #9d174d;
+  --fin-amber-bg: #fef3c7;
+  --fin-amber: #92400e;
+  --fin-red-bg: #fee2e2;
+  --fin-red: #991b1b;
+}
+
+.finances .sol-content {
+  min-width: 0;
+}
+
+.finances .sol-chart {
+  overflow-x: auto;
+}
+
+.finances .sol-chart-flush {
+  padding: 0;
+}
+
+.finances .sol-chart h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-neutral-900);
+  margin-bottom: 1.25rem;
+}
+
+.finances .sol-kpi {
+  width: 100%;
+  min-width: 0;
+  text-align: left;
+}
+
+.finances .sol-kpi-value {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.finances .sol-kpi-value-md {
+  font-size: 1.4rem;
+}
+
+.finances .sol-kpi-value-sm {
+  font-size: 1.15rem;
+}
+
+.finances .sol-kpi-value-xs {
+  font-size: 0.95rem;
+}
+
 .fin-donut {
   position: relative;
   width: 160px;

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Plus, Gift, TrendingUp, FileText } from 'lucide-react'
 import { mockDonations } from '../mockData'
 import { useToast } from '../toast'
-import { Modal, formatMoney, EmptyState } from '../ui'
+import { Modal, formatMoney, EmptyState, KpiCard } from '../ui'
 import type { Donation } from '../types'
 
 export default function Dons() {
@@ -35,22 +35,13 @@ export default function Dons() {
       </div>
 
       <div className="grid-3" style={{ marginBottom: '1.5rem' }}>
-        <div className="sol-kpi">
-          <div className="sol-kpi-icon" style={{ background: '#fce7f3', color: '#9d174d' }}><Gift size={24} /></div>
-          <div><div className="sol-kpi-value">{formatMoney(totalAmount)}</div><div className="sol-kpi-label">Total des dons</div></div>
-        </div>
-        <div className="sol-kpi">
-          <div className="sol-kpi-icon" style={{ background: '#dbeafe', color: '#1e40af' }}><TrendingUp size={24} /></div>
-          <div><div className="sol-kpi-value">{uniqueDonors}</div><div className="sol-kpi-label">Donateurs</div></div>
-        </div>
-        <div className="sol-kpi">
-          <div className="sol-kpi-icon" style={{ background: '#d1fae5', color: '#065f46' }}><FileText size={24} /></div>
-          <div><div className="sol-kpi-value">{projects}</div><div className="sol-kpi-label">Projets soutenus</div></div>
-        </div>
+        <KpiCard icon={Gift} label="Total des dons" value={formatMoney(totalAmount)} bg="#fce7f3" color="#9d174d" />
+        <KpiCard icon={TrendingUp} label="Donateurs" value={String(uniqueDonors)} bg="#dbeafe" color="#1e40af" />
+        <KpiCard icon={FileText} label="Projets soutenus" value={String(projects)} bg="#d1fae5" color="#065f46" />
       </div>
 
       {donations.length === 0 ? <EmptyState message="Aucun don enregistré." /> : (
-        <div className="sol-chart" style={{ padding: 0, overflow: 'hidden' }}>
+        <div className="sol-chart sol-chart-flush">
           <table className="sol-table">
             <thead><tr><th>Reçu</th><th>Donateur</th><th>Montant</th><th>Date</th><th>Projet</th><th>Affectation</th></tr></thead>
             <tbody>
