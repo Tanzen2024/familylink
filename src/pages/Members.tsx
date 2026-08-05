@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Search, Users } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import type { Member, Family } from '../lib/types'
 
@@ -34,18 +35,21 @@ export default function Members() {
   if (loading) return <div className="loading-state">Chargement…</div>
 
   return (
-    <div className="container">
+    <div className="container members-page">
       <h1 className="page-title">Annuaire des membres</h1>
       <p className="page-subtitle">{filtered.length} membre{filtered.length !== 1 ? 's' : ''} du village</p>
 
       <div className="search-bar">
-        <input
-          type="text"
-          className="form-input"
-          placeholder="Rechercher par nom ou profession…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        <div className="search-bar-field">
+          <Search size={16} />
+          <input
+            type="text"
+            className="form-input"
+            placeholder="Rechercher par nom ou profession…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
         <select className="form-select" value={genderFilter} onChange={(e) => setGenderFilter(e.target.value)}>
           <option value="">Tous les sexes</option>
           <option value="male">Hommes</option>
@@ -61,6 +65,7 @@ export default function Members() {
 
       {filtered.length === 0 ? (
         <div className="empty-state">
+          <Users size={28} strokeWidth={1.5} />
           <p>Aucun membre trouvé. {members.length === 0 && 'Aucun membre enregistré pour le moment.'}</p>
         </div>
       ) : (
@@ -78,7 +83,7 @@ export default function Members() {
                   {m.profession || 'Membre du village'}
                 </div>
                 {m.family && (
-                  <div className="member-card-info" style={{ marginTop: '0.25rem' }}>
+                  <div className="member-card-info member-card-family">
                     Famille {m.family.name}
                   </div>
                 )}

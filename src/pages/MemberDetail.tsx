@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { Briefcase, Cake, User, Phone, Mail, MapPin, Users, NotebookText, UserX } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import type { Member } from '../lib/types'
 
@@ -22,8 +23,9 @@ export default function MemberDetail() {
 
   if (loading) return <div className="loading-state">Chargement…</div>
   if (!member) return (
-    <div className="container">
-      <div className="empty-state">
+    <div className="container member-detail-page">
+      <div className="empty-state member-notfound">
+        <UserX size={28} strokeWidth={1.5} />
         <p>Membre introuvable.</p>
         <Link to="/membres" className="btn btn-primary" style={{ marginTop: '1rem' }}>Retour à l'annuaire</Link>
       </div>
@@ -35,84 +37,86 @@ export default function MemberDetail() {
     : null
 
   return (
-    <div className="container">
+    <div className="container member-detail-page">
       <Link to="/membres" className="back-link">← Retour à l'annuaire</Link>
 
-      <div className="member-detail">
-        <div>
-          {member.photo_url ? (
-            <img src={member.photo_url} alt={`${member.first_name} ${member.last_name}`} className="member-detail-photo" />
-          ) : (
-            <div className="member-detail-placeholder">{member.first_name[0]}{member.last_name[0]}</div>
-          )}
-        </div>
+      <div className="member-detail-card">
+        <div className="member-detail">
+          <div className="member-detail-photo-wrap">
+            {member.photo_url ? (
+              <img src={member.photo_url} alt={`${member.first_name} ${member.last_name}`} className="member-detail-photo" />
+            ) : (
+              <div className="member-detail-placeholder">{member.first_name[0]}{member.last_name[0]}</div>
+            )}
+          </div>
 
-        <div className="member-detail-info">
-          <h1>{member.first_name} {member.last_name}</h1>
+          <div className="member-detail-info">
+            <h1>{member.first_name} {member.last_name}</h1>
 
-          {member.association_roles && member.association_roles.length > 0 && (
-            <div style={{ marginBottom: '1rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-              {member.association_roles.map((r) => (
-                <span key={r.id} className="badge badge-green">{r.role}</span>
-              ))}
-            </div>
-          )}
+            {member.association_roles && member.association_roles.length > 0 && (
+              <div className="member-detail-roles">
+                {member.association_roles.map((r) => (
+                  <span key={r.id} className="badge badge-green">{r.role}</span>
+                ))}
+              </div>
+            )}
 
-          {member.profession && (
-            <div className="info-row">
-              <span className="info-label">Profession</span>
-              <span className="info-value">{member.profession}</span>
-            </div>
-          )}
+            {member.profession && (
+              <div className="info-row">
+                <span className="info-label"><Briefcase size={15} /> Profession</span>
+                <span className="info-value">{member.profession}</span>
+              </div>
+            )}
 
-          {age !== null && (
-            <div className="info-row">
-              <span className="info-label">Âge</span>
-              <span className="info-value">{age} ans</span>
-            </div>
-          )}
+            {age !== null && (
+              <div className="info-row">
+                <span className="info-label"><Cake size={15} /> Âge</span>
+                <span className="info-value">{age} ans</span>
+              </div>
+            )}
 
-          {member.gender && (
-            <div className="info-row">
-              <span className="info-label">Sexe</span>
-              <span className="info-value">{member.gender === 'male' ? 'Homme' : 'Femme'}</span>
-            </div>
-          )}
+            {member.gender && (
+              <div className="info-row">
+                <span className="info-label"><User size={15} /> Sexe</span>
+                <span className="info-value">{member.gender === 'male' ? 'Homme' : 'Femme'}</span>
+              </div>
+            )}
 
-          {member.phone && (
-            <div className="info-row">
-              <span className="info-label">Téléphone</span>
-              <span className="info-value">{member.phone}</span>
-            </div>
-          )}
+            {member.phone && (
+              <div className="info-row">
+                <span className="info-label"><Phone size={15} /> Téléphone</span>
+                <span className="info-value">{member.phone}</span>
+              </div>
+            )}
 
-          {member.email && (
-            <div className="info-row">
-              <span className="info-label">Email</span>
-              <span className="info-value">{member.email}</span>
-            </div>
-          )}
+            {member.email && (
+              <div className="info-row">
+                <span className="info-label"><Mail size={15} /> Email</span>
+                <span className="info-value">{member.email}</span>
+              </div>
+            )}
 
-          {member.address && (
-            <div className="info-row">
-              <span className="info-label">Adresse</span>
-              <span className="info-value">{member.address}</span>
-            </div>
-          )}
+            {member.address && (
+              <div className="info-row">
+                <span className="info-label"><MapPin size={15} /> Adresse</span>
+                <span className="info-value">{member.address}</span>
+              </div>
+            )}
 
-          {member.family && (
-            <div className="info-row">
-              <span className="info-label">Famille</span>
-              <span className="info-value">{member.family.name}</span>
-            </div>
-          )}
+            {member.family && (
+              <div className="info-row">
+                <span className="info-label"><Users size={15} /> Famille</span>
+                <span className="info-value">{member.family.name}</span>
+              </div>
+            )}
 
-          {member.bio && (
-            <div className="member-detail-bio">
-              <h3 style={{ marginBottom: '0.75rem', fontSize: '1rem', fontWeight: 600 }}>À propos</h3>
-              <p>{member.bio}</p>
-            </div>
-          )}
+            {member.bio && (
+              <div className="member-detail-bio">
+                <h3 className="member-detail-bio-title"><NotebookText size={16} /> À propos</h3>
+                <p>{member.bio}</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -2448,6 +2448,12 @@ button:focus-visible,
     height: auto;
     aspect-ratio: 1;
   }
+  .member-detail-card {
+    padding: 1.5rem;
+  }
+  .member-detail-info .info-label {
+    min-width: 120px;
+  }
   .form-row-2 {
     grid-template-columns: 1fr;
   }
