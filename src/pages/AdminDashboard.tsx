@@ -1,9 +1,28 @@
 import { useEffect, useState, type ReactNode } from 'react'
+import {
+  Users,
+  Home as HomeIcon,
+  CalendarDays,
+  Newspaper,
+  Image as ImageIcon,
+  Plus,
+  Pencil,
+  Trash2,
+  X,
+} from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import type { Member, Family, EventItem, NewsItem, GalleryItem } from '../lib/types'
 import PhotoUpload from '../components/PhotoUpload'
 
 type Tab = 'members' | 'families' | 'events' | 'news' | 'gallery'
+
+const TABS: { key: Tab; label: string; icon: typeof Users }[] = [
+  { key: 'members', label: 'Membres', icon: Users },
+  { key: 'families', label: 'Familles', icon: HomeIcon },
+  { key: 'events', label: 'Événements', icon: CalendarDays },
+  { key: 'news', label: 'Actualités', icon: Newspaper },
+  { key: 'gallery', label: 'Galerie', icon: ImageIcon },
+]
 
 export default function AdminDashboard() {
   const [tab, setTab] = useState<Tab>('members')
@@ -51,15 +70,25 @@ export default function AdminDashboard() {
     setGallery(data ?? [])
   }
 
+  const counts: Record<Tab, number> = {
+    members: members.length,
+    families: families.length,
+    events: events.length,
+    news: news.length,
+    gallery: gallery.length,
+  }
+
   return (
-    <div className="container">
+    <div className="container dashboard-page">
       <h1 className="page-title">Tableau de bord</h1>
       <p className="page-subtitle">Gérez les membres, familles, événements et actualités</p>
 
-      <div className="auth-tabs" style={{ marginBottom: '1.5rem' }}>
-        {(['members', 'families', 'events', 'news', 'gallery'] as Tab[]).map((t) => (
-          <button key={t} className={`auth-tab ${tab === t ? 'active' : ''}`} onClick={() => setTab(t)}>
-            {t === 'members' ? 'Membres' : t === 'families' ? 'Familles' : t === 'events' ? 'Événements' : t === 'news' ? 'Actualités' : 'Galerie'}
+      <div className="dashboard-tabs">
+        {TABS.map(({ key, label, icon: Icon }) => (
+          <button key={key} className={`dashboard-tab ${tab === key ? 'active' : ''}`} onClick={() => setTab(key)}>
+            <Icon size={15} strokeWidth={2.25} />
+            {label}
+            <span className="dashboard-tab-count">{counts[key]}</span>
           </button>
         ))}
       </div>
@@ -79,7 +108,9 @@ function Modal({ title, onClose, children }: { title: string; onClose: () => voi
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h3>{title}</h3>
-          <button className="modal-close" onClick={onClose}>&times;</button>
+          <button className="modal-close" onClick={onClose} aria-label="Fermer">
+            <X size={18} />
+          </button>
         </div>
         <div className="modal-body">{children}</div>
       </div>
@@ -104,31 +135,44 @@ function MembersTab({ members, families, onRefresh }: { members: Member[]; famil
     <div className="admin-section">
       <div className="admin-section-header">
         <h3>Membres ({members.length})</h3>
-        <button className="btn btn-primary" onClick={() => { setEditing(null); setShowForm(true) }}>+ Ajouter</button>
+        <button className="btn btn-primary" onClick={() => { setEditing(null); setShowForm(true) }}>
+          <Plus size={16} /> Ajouter
+        </button>
       </div>
 
       {members.length === 0 ? (
-        <div className="empty-state"><p>Aucun membre. Cliquez sur « Ajouter » pour en créer un.</p></div>
+        <div className="dashboard-empty">
+          <Users size={28} strokeWidth={1.5} />
+          <p>Aucun membre. Cliquez sur « Ajouter » pour en créer un.</p>
+        </div>
       ) : (
-        <table className="admin-table">
-          <thead>
-            <tr><th>Nom</th><th>Profession</th><th>Famille</th><th>Statut</th><th>Actions</th></tr>
-          </thead>
-          <tbody>
-            {members.map((m) => (
-              <tr key={m.id}>
-                <td>{m.first_name} {m.last_name}</td>
-                <td>{m.profession || '—'}</td>
-                <td>{m.family?.name || '—'}</td>
-                <td>{m.is_active ? <span className="badge badge-green">Actif</span> : <span className="badge badge-orange">Inactif</span>}</td>
-                <td>
-                  <button className="btn btn-secondary" style={{ marginRight: '0.5rem' }} onClick={() => { setEditing(m); setShowForm(true) }}>Modifier</button>
-                  <button className="btn btn-danger" onClick={() => handleDelete(m.id)}>Supprimer</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="dashboard-table-wrap">
+          <table className="admin-table">
+            <thead>
+              <tr><th>Nom</th><th>Profession</th><th>Famille</th><th>Statut</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              {members.map((m) => (
+                <tr key={m.id}>
+                  <td>{m.first_name} {m.last_name}</td>
+                  <td>{m.profession || '—'}</td>
+                  <td>{m.family?.name || '—'}</td>
+                  <td>{m.is_active ? <span className="badge badge-green">Actif</span> : <span className="badge badge-orange">Inactif</span>}</td>
+                  <td>
+                    <div className="dashboard-row-actions">
+                      <button className="btn btn-secondary" onClick={() => { setEditing(m); setShowForm(true) }}>
+                        <Pencil size={14} /> Modifier
+                      </button>
+                      <button className="btn btn-danger" onClick={() => handleDelete(m.id)}>
+                        <Trash2 size={14} /> Supprimer
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
 
       {showForm && (
@@ -292,27 +336,40 @@ function FamiliesTab({ families, onRefresh }: { families: Family[]; onRefresh: (
     <div className="admin-section">
       <div className="admin-section-header">
         <h3>Familles ({families.length})</h3>
-        <button className="btn btn-primary" onClick={() => { setEditing(null); setShowForm(true) }}>+ Ajouter</button>
+        <button className="btn btn-primary" onClick={() => { setEditing(null); setShowForm(true) }}>
+          <Plus size={16} /> Ajouter
+        </button>
       </div>
 
       {families.length === 0 ? (
-        <div className="empty-state"><p>Aucune famille enregistrée.</p></div>
+        <div className="dashboard-empty">
+          <HomeIcon size={28} strokeWidth={1.5} />
+          <p>Aucune famille enregistrée.</p>
+        </div>
       ) : (
-        <table className="admin-table">
-          <thead><tr><th>Nom</th><th>Description</th><th>Actions</th></tr></thead>
-          <tbody>
-            {families.map((f) => (
-              <tr key={f.id}>
-                <td>{f.name}</td>
-                <td>{f.description || '—'}</td>
-                <td>
-                  <button className="btn btn-secondary" style={{ marginRight: '0.5rem' }} onClick={() => { setEditing(f); setShowForm(true) }}>Modifier</button>
-                  <button className="btn btn-danger" onClick={() => handleDelete(f.id)}>Supprimer</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="dashboard-table-wrap">
+          <table className="admin-table">
+            <thead><tr><th>Nom</th><th>Description</th><th>Actions</th></tr></thead>
+            <tbody>
+              {families.map((f) => (
+                <tr key={f.id}>
+                  <td>{f.name}</td>
+                  <td>{f.description || '—'}</td>
+                  <td>
+                    <div className="dashboard-row-actions">
+                      <button className="btn btn-secondary" onClick={() => { setEditing(f); setShowForm(true) }}>
+                        <Pencil size={14} /> Modifier
+                      </button>
+                      <button className="btn btn-danger" onClick={() => handleDelete(f.id)}>
+                        <Trash2 size={14} /> Supprimer
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
 
       {showForm && (
@@ -378,28 +435,41 @@ function EventsTab({ events, onRefresh }: { events: EventItem[]; onRefresh: () =
     <div className="admin-section">
       <div className="admin-section-header">
         <h3>Événements ({events.length})</h3>
-        <button className="btn btn-primary" onClick={() => { setEditing(null); setShowForm(true) }}>+ Ajouter</button>
+        <button className="btn btn-primary" onClick={() => { setEditing(null); setShowForm(true) }}>
+          <Plus size={16} /> Ajouter
+        </button>
       </div>
 
       {events.length === 0 ? (
-        <div className="empty-state"><p>Aucun événement enregistré.</p></div>
+        <div className="dashboard-empty">
+          <CalendarDays size={28} strokeWidth={1.5} />
+          <p>Aucun événement enregistré.</p>
+        </div>
       ) : (
-        <table className="admin-table">
-          <thead><tr><th>Titre</th><th>Date</th><th>Lieu</th><th>Actions</th></tr></thead>
-          <tbody>
-            {events.map((e) => (
-              <tr key={e.id}>
-                <td>{e.title}</td>
-                <td>{e.event_date ? new Date(e.event_date).toLocaleDateString('fr-FR') : '—'}</td>
-                <td>{e.location || '—'}</td>
-                <td>
-                  <button className="btn btn-secondary" style={{ marginRight: '0.5rem' }} onClick={() => { setEditing(e); setShowForm(true) }}>Modifier</button>
-                  <button className="btn btn-danger" onClick={() => handleDelete(e.id)}>Supprimer</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="dashboard-table-wrap">
+          <table className="admin-table">
+            <thead><tr><th>Titre</th><th>Date</th><th>Lieu</th><th>Actions</th></tr></thead>
+            <tbody>
+              {events.map((e) => (
+                <tr key={e.id}>
+                  <td>{e.title}</td>
+                  <td>{e.event_date ? new Date(e.event_date).toLocaleDateString('fr-FR') : '—'}</td>
+                  <td>{e.location || '—'}</td>
+                  <td>
+                    <div className="dashboard-row-actions">
+                      <button className="btn btn-secondary" onClick={() => { setEditing(e); setShowForm(true) }}>
+                        <Pencil size={14} /> Modifier
+                      </button>
+                      <button className="btn btn-danger" onClick={() => handleDelete(e.id)}>
+                        <Trash2 size={14} /> Supprimer
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
 
       {showForm && (
@@ -493,27 +563,40 @@ function NewsTab({ news, onRefresh }: { news: NewsItem[]; onRefresh: () => Promi
     <div className="admin-section">
       <div className="admin-section-header">
         <h3>Actualités ({news.length})</h3>
-        <button className="btn btn-primary" onClick={() => { setEditing(null); setShowForm(true) }}>+ Ajouter</button>
+        <button className="btn btn-primary" onClick={() => { setEditing(null); setShowForm(true) }}>
+          <Plus size={16} /> Ajouter
+        </button>
       </div>
 
       {news.length === 0 ? (
-        <div className="empty-state"><p>Aucune actualité enregistrée.</p></div>
+        <div className="dashboard-empty">
+          <Newspaper size={28} strokeWidth={1.5} />
+          <p>Aucune actualité enregistrée.</p>
+        </div>
       ) : (
-        <table className="admin-table">
-          <thead><tr><th>Titre</th><th>Date</th><th>Actions</th></tr></thead>
-          <tbody>
-            {news.map((n) => (
-              <tr key={n.id}>
-                <td>{n.title}</td>
-                <td>{new Date(n.published_at).toLocaleDateString('fr-FR')}</td>
-                <td>
-                  <button className="btn btn-secondary" style={{ marginRight: '0.5rem' }} onClick={() => { setEditing(n); setShowForm(true) }}>Modifier</button>
-                  <button className="btn btn-danger" onClick={() => handleDelete(n.id)}>Supprimer</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="dashboard-table-wrap">
+          <table className="admin-table">
+            <thead><tr><th>Titre</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody>
+              {news.map((n) => (
+                <tr key={n.id}>
+                  <td>{n.title}</td>
+                  <td>{new Date(n.published_at).toLocaleDateString('fr-FR')}</td>
+                  <td>
+                    <div className="dashboard-row-actions">
+                      <button className="btn btn-secondary" onClick={() => { setEditing(n); setShowForm(true) }}>
+                        <Pencil size={14} /> Modifier
+                      </button>
+                      <button className="btn btn-danger" onClick={() => handleDelete(n.id)}>
+                        <Trash2 size={14} /> Supprimer
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
 
       {showForm && (
@@ -588,11 +671,16 @@ function GalleryTab({ items, onRefresh }: { items: GalleryItem[]; onRefresh: () 
     <div className="admin-section">
       <div className="admin-section-header">
         <h3>Galerie ({items.length})</h3>
-        <button className="btn btn-primary" onClick={() => { setEditing(null); setShowForm(true) }}>+ Ajouter</button>
+        <button className="btn btn-primary" onClick={() => { setEditing(null); setShowForm(true) }}>
+          <Plus size={16} /> Ajouter
+        </button>
       </div>
 
       {items.length === 0 ? (
-        <div className="empty-state"><p>Aucune photo. Cliquez sur « Ajouter » pour en mettre une en ligne.</p></div>
+        <div className="dashboard-empty">
+          <ImageIcon size={28} strokeWidth={1.5} />
+          <p>Aucune photo. Cliquez sur « Ajouter » pour en mettre une en ligne.</p>
+        </div>
       ) : (
         <div className="grid-3">
           {items.map((item) => (
@@ -601,9 +689,13 @@ function GalleryTab({ items, onRefresh }: { items: GalleryItem[]; onRefresh: () 
               <div className="member-card-body">
                 <div className="member-card-name">{item.title}</div>
                 {item.category && <div className="member-card-info">{item.category}</div>}
-                <div style={{ marginTop: '0.75rem', display: 'flex', gap: '0.5rem' }}>
-                  <button className="btn btn-secondary" onClick={() => { setEditing(item); setShowForm(true) }}>Modifier</button>
-                  <button className="btn btn-danger" onClick={() => handleDelete(item.id)}>Supprimer</button>
+                <div className="dashboard-row-actions" style={{ marginTop: '0.75rem' }}>
+                  <button className="btn btn-secondary" onClick={() => { setEditing(item); setShowForm(true) }}>
+                    <Pencil size={14} /> Modifier
+                  </button>
+                  <button className="btn btn-danger" onClick={() => handleDelete(item.id)}>
+                    <Trash2 size={14} /> Supprimer
+                  </button>
                 </div>
               </div>
             </div>
