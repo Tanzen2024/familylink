@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Settings, Save, Plus, Trash2, Banknote, Tag, Calendar, Percent } from 'lucide-react'
+import { Save, Plus, Trash2, Banknote, Tag, Percent } from 'lucide-react'
 import { useToast } from '../toast'
-import { formatMoney } from '../ui'
+import { formatCurrencyFCFA } from '../ui'
 import { mockSettings } from '../mockData'
 import type { FinanceSettings } from '../types'
 
@@ -72,7 +72,7 @@ export default function Parametres() {
             <input type="number" className="form-input" value={settings.penaltyRate} onChange={(e) => setSettings({ ...settings, penaltyRate: Number(e.target.value) })} />
           </div>
           <div style={{ padding: '0.75rem', background: 'var(--color-neutral-50)', borderRadius: 'var(--radius-sm)', fontSize: '0.85rem', color: 'var(--color-neutral-600)' }}>
-            Cotisation actuelle: <strong>{formatMoney(settings.contributionAmount)}</strong> / an
+            Cotisation actuelle: <strong>{formatCurrencyFCFA(settings.contributionAmount)}</strong> / an
             {settings.penaltyRate > 0 && <span> avec {settings.penaltyRate}% de pénalité en cas de retard</span>}
           </div>
         </div>

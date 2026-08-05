@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Search, CreditCard, FileText, CheckCircle2, XCircle, Clock } from 'lucide-react'
 import { mockPayments } from '../mockData'
-import { PaymentStatusBadge, formatMoney, EmptyState, KpiCard } from '../ui'
+import { PaymentStatusBadge, formatCurrencyFCFA, EmptyState, KpiCard } from '../ui'
 import type { PaymentStatus } from '../types'
 
 const STATUSES: PaymentStatus[] = ['En attente', 'Effectué', 'Rejeté']
@@ -34,7 +34,7 @@ export default function Paiements() {
         </div>
       </div>
 
-      <div className="grid-3" style={{ marginBottom: '1.5rem' }}>
+      <div className="kpi-grid" style={{ marginBottom: '1.5rem' }}>
         <KpiCard icon={CheckCircle2} label="Paiements effectués" value={String(counts['Effectué'])} bg="#d1fae5" color="#065f46" onClick={() => setTab('Effectué')} />
         <KpiCard icon={Clock} label="Paiements en attente" value={String(counts['En attente'])} bg="#fef3c7" color="#92400e" onClick={() => setTab('En attente')} />
         <KpiCard icon={XCircle} label="Paiements rejetés" value={String(counts['Rejeté'])} bg="#fee2e2" color="#991b1b" onClick={() => setTab('Rejeté')} />
@@ -64,7 +64,7 @@ export default function Paiements() {
         <div className="sol-chart sol-chart-flush">
           <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--color-neutral-200)', fontWeight: 600, fontSize: '0.9rem', display: 'flex', justifyContent: 'space-between' }}>
             <span>{filtered.length} paiement(s)</span>
-            <span>Total: {formatMoney(total)}</span>
+            <span>Total: {formatCurrencyFCFA(total)}</span>
           </div>
           <table className="sol-table">
             <thead><tr><th>Référence</th><th>Libellé</th><th>Bénéficiaire</th><th>Montant</th><th>Date</th><th>Méthode</th><th>Statut</th><th>Reçu</th></tr></thead>
@@ -74,7 +74,7 @@ export default function Paiements() {
                   <td style={{ fontWeight: 600, fontSize: '0.8rem' }}>{p.reference}</td>
                   <td style={{ fontWeight: 500 }}>{p.label}</td>
                   <td>{p.recipient}</td>
-                  <td style={{ fontWeight: 700 }}>{formatMoney(p.amount)}</td>
+                  <td style={{ fontWeight: 700 }}>{formatCurrencyFCFA(p.amount)}</td>
                   <td>{new Date(p.date).toLocaleDateString('fr-FR')}</td>
                   <td><span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><CreditCard size={14} style={{ color: 'var(--color-neutral-400)' }} /> {p.method}</span></td>
                   <td><PaymentStatusBadge status={p.status} /></td>

@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { FileBarChart, FileText, Download, Users, TrendingUp, TrendingDown, Scale } from 'lucide-react'
+import { FileBarChart, Download, Users, TrendingUp, TrendingDown, Scale } from 'lucide-react'
 import { useToast } from '../toast'
-import { formatMoney, formatMoneyShort } from '../ui'
+import { formatCurrencyFCFA } from '../ui'
 import { mockContributions, mockIncomes, mockExpenses, monthlyIncomeData, monthlyExpenseData } from '../mockData'
 
 type ReportType = 'monthly' | 'annual' | 'contributions' | 'expenses' | 'incomes' | 'balance'
@@ -75,15 +75,15 @@ export default function Rapports() {
               <div className="grid-3" style={{ marginBottom: '1.5rem' }}>
                 <div style={{ padding: '1rem', background: '#d1fae5', borderRadius: 'var(--radius-sm)' }}>
                   <div style={{ fontSize: '0.8rem', color: '#065f46' }}>Recettes du mois</div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#065f46' }}>{formatMoney(monthlyIncomeData[6].cotisations + monthlyIncomeData[6].dons + monthlyIncomeData[6].collectes + monthlyIncomeData[6].subventions + monthlyIncomeData[6].autres)}</div>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#065f46' }}>{formatCurrencyFCFA(monthlyIncomeData[6].cotisations + monthlyIncomeData[6].dons + monthlyIncomeData[6].collectes + monthlyIncomeData[6].subventions + monthlyIncomeData[6].autres)}</div>
                 </div>
                 <div style={{ padding: '1rem', background: '#fee2e2', borderRadius: 'var(--radius-sm)' }}>
                   <div style={{ fontSize: '0.8rem', color: '#991b1b' }}>Dépenses du mois</div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#991b1b' }}>{formatMoney(monthlyExpenseData[6].total)}</div>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#991b1b' }}>{formatCurrencyFCFA(monthlyExpenseData[6].total)}</div>
                 </div>
                 <div style={{ padding: '1rem', background: balance >= 0 ? '#dbeafe' : '#fef3c7', borderRadius: 'var(--radius-sm)' }}>
                   <div style={{ fontSize: '0.8rem', color: balance >= 0 ? '#1e40af' : '#92400e' }}>Solde du mois</div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 700, color: balance >= 0 ? '#1e40af' : '#92400e' }}>{formatMoney(monthlyIncomeData[6].cotisations + monthlyIncomeData[6].dons + monthlyIncomeData[6].collectes + monthlyIncomeData[6].subventions + monthlyIncomeData[6].autres - monthlyExpenseData[6].total)}</div>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 700, color: balance >= 0 ? '#1e40af' : '#92400e' }}>{formatCurrencyFCFA(monthlyIncomeData[6].cotisations + monthlyIncomeData[6].dons + monthlyIncomeData[6].collectes + monthlyIncomeData[6].subventions + monthlyIncomeData[6].autres - monthlyExpenseData[6].total)}</div>
                 </div>
               </div>
               <table className="sol-table">
@@ -92,7 +92,7 @@ export default function Rapports() {
                   {monthlyIncomeData.map((d, i) => {
                     const inc = d.cotisations + d.dons + d.collectes + d.subventions + d.autres
                     const exp = monthlyExpenseData[i].total
-                    return <tr key={d.month}><td>{d.month}</td><td style={{ color: '#065f46' }}>{formatMoney(inc)}</td><td style={{ color: '#991b1b' }}>{formatMoney(exp)}</td><td style={{ fontWeight: 700, color: inc - exp >= 0 ? '#065f46' : '#991b1b' }}>{formatMoney(inc - exp)}</td></tr>
+                    return <tr key={d.month}><td>{d.month}</td><td style={{ color: '#065f46' }}>{formatCurrencyFCFA(inc)}</td><td style={{ color: '#991b1b' }}>{formatCurrencyFCFA(exp)}</td><td style={{ fontWeight: 700, color: inc - exp >= 0 ? '#065f46' : '#991b1b' }}>{formatCurrencyFCFA(inc - exp)}</td></tr>
                   })}
                 </tbody>
               </table>
@@ -104,16 +104,16 @@ export default function Rapports() {
               <div className="grid-2" style={{ marginBottom: '1.5rem' }}>
                 <div style={{ padding: '1.5rem', background: 'var(--color-neutral-50)', borderRadius: 'var(--radius-md)' }}>
                   <div style={{ fontSize: '0.85rem', color: 'var(--color-neutral-500)', marginBottom: '0.25rem' }}>Total recettes 2025</div>
-                  <div style={{ fontSize: '2rem', fontWeight: 700, color: '#065f46' }}>{formatMoney(totalIncome)}</div>
+                  <div style={{ fontSize: '2rem', fontWeight: 700, color: '#065f46' }}>{formatCurrencyFCFA(totalIncome)}</div>
                 </div>
                 <div style={{ padding: '1.5rem', background: 'var(--color-neutral-50)', borderRadius: 'var(--radius-md)' }}>
                   <div style={{ fontSize: '0.85rem', color: 'var(--color-neutral-500)', marginBottom: '0.25rem' }}>Total dépenses 2025</div>
-                  <div style={{ fontSize: '2rem', fontWeight: 700, color: '#991b1b' }}>{formatMoney(totalExpense)}</div>
+                  <div style={{ fontSize: '2rem', fontWeight: 700, color: '#991b1b' }}>{formatCurrencyFCFA(totalExpense)}</div>
                 </div>
               </div>
               <div style={{ padding: '1rem', background: balance >= 0 ? '#d1fae5' : '#fee2e2', borderRadius: 'var(--radius-md)', marginBottom: '1rem' }}>
                 <div style={{ fontSize: '0.85rem', color: balance >= 0 ? '#065f46' : '#991b1b' }}>Bilan financier</div>
-                <div style={{ fontSize: '1.75rem', fontWeight: 700, color: balance >= 0 ? '#065f46' : '#991b1b' }}>{formatMoney(balance)}</div>
+                <div style={{ fontSize: '1.75rem', fontWeight: 700, color: balance >= 0 ? '#065f46' : '#991b1b' }}>{formatCurrencyFCFA(balance)}</div>
               </div>
               <table className="sol-table">
                 <thead><tr><th>Mois</th><th>Recettes</th><th>Dépenses</th><th>Solde</th></tr></thead>
@@ -121,7 +121,7 @@ export default function Rapports() {
                   {monthlyIncomeData.map((d, i) => {
                     const inc = d.cotisations + d.dons + d.collectes + d.subventions + d.autres
                     const exp = monthlyExpenseData[i].total
-                    return <tr key={d.month}><td>{d.month} 2025</td><td style={{ color: '#065f46' }}>{formatMoney(inc)}</td><td style={{ color: '#991b1b' }}>{formatMoney(exp)}</td><td style={{ fontWeight: 700, color: inc - exp >= 0 ? '#065f46' : '#991b1b' }}>{formatMoney(inc - exp)}</td></tr>
+                    return <tr key={d.month}><td>{d.month} 2025</td><td style={{ color: '#065f46' }}>{formatCurrencyFCFA(inc)}</td><td style={{ color: '#991b1b' }}>{formatCurrencyFCFA(exp)}</td><td style={{ fontWeight: 700, color: inc - exp >= 0 ? '#065f46' : '#991b1b' }}>{formatCurrencyFCFA(inc - exp)}</td></tr>
                   })}
                 </tbody>
               </table>
@@ -133,7 +133,7 @@ export default function Rapports() {
               <thead><tr><th>Membre</th><th>Numéro</th><th>Attendu</th><th>Payé</th><th>Solde</th><th>Statut</th></tr></thead>
               <tbody>
                 {mockContributions.map((c) => (
-                  <tr key={c.id}><td style={{ fontWeight: 500 }}>{c.member}</td><td style={{ fontSize: '0.8rem' }}>{c.number}</td><td>{formatMoney(c.expectedAmount)}</td><td style={{ color: '#065f46' }}>{formatMoney(c.paidAmount)}</td><td style={{ color: c.expectedAmount - c.paidAmount > 0 ? '#991b1b' : 'inherit' }}>{formatMoney(c.expectedAmount - c.paidAmount)}</td><td>{c.status}</td></tr>
+                  <tr key={c.id}><td style={{ fontWeight: 500 }}>{c.member}</td><td style={{ fontSize: '0.8rem' }}>{c.number}</td><td>{formatCurrencyFCFA(c.expectedAmount)}</td><td style={{ color: '#065f46' }}>{formatCurrencyFCFA(c.paidAmount)}</td><td style={{ color: c.expectedAmount - c.paidAmount > 0 ? '#991b1b' : 'inherit' }}>{formatCurrencyFCFA(c.expectedAmount - c.paidAmount)}</td><td>{c.status}</td></tr>
                 ))}
               </tbody>
             </table>
@@ -144,7 +144,7 @@ export default function Rapports() {
               <thead><tr><th>Référence</th><th>Catégorie</th><th>Bénéficiaire</th><th>Montant</th><th>Date</th><th>Validée</th></tr></thead>
               <tbody>
                 {mockExpenses.map((e) => (
-                  <tr key={e.id}><td style={{ fontSize: '0.8rem' }}>{e.reference}</td><td>{e.category}</td><td>{e.beneficiary}</td><td style={{ fontWeight: 700, color: '#991b1b' }}>{formatMoney(e.amount)}</td><td>{new Date(e.date).toLocaleDateString('fr-FR')}</td><td>{e.validated ? 'Oui' : 'Non'}</td></tr>
+                  <tr key={e.id}><td style={{ fontSize: '0.8rem' }}>{e.reference}</td><td>{e.category}</td><td>{e.beneficiary}</td><td style={{ fontWeight: 700, color: '#991b1b' }}>{formatCurrencyFCFA(e.amount)}</td><td>{new Date(e.date).toLocaleDateString('fr-FR')}</td><td>{e.validated ? 'Oui' : 'Non'}</td></tr>
                 ))}
               </tbody>
             </table>
@@ -155,7 +155,7 @@ export default function Rapports() {
               <thead><tr><th>Référence</th><th>Origine</th><th>Description</th><th>Montant</th><th>Date</th></tr></thead>
               <tbody>
                 {mockIncomes.map((i) => (
-                  <tr key={i.id}><td style={{ fontSize: '0.8rem' }}>{i.reference}</td><td>{i.origin}</td><td>{i.description}</td><td style={{ fontWeight: 700, color: '#065f46' }}>{formatMoney(i.amount)}</td><td>{new Date(i.date).toLocaleDateString('fr-FR')}</td></tr>
+                  <tr key={i.id}><td style={{ fontSize: '0.8rem' }}>{i.reference}</td><td>{i.origin}</td><td>{i.description}</td><td style={{ fontWeight: 700, color: '#065f46' }}>{formatCurrencyFCFA(i.amount)}</td><td>{new Date(i.date).toLocaleDateString('fr-FR')}</td></tr>
                 ))}
               </tbody>
             </table>
@@ -165,15 +165,15 @@ export default function Rapports() {
             <div>
               <div style={{ padding: '2rem', background: 'var(--color-neutral-50)', borderRadius: 'var(--radius-md)', textAlign: 'center', marginBottom: '1rem' }}>
                 <div style={{ fontSize: '0.9rem', color: 'var(--color-neutral-500)', marginBottom: '0.5rem' }}>Bilan financier 2025</div>
-                <div style={{ fontSize: '2.5rem', fontWeight: 700, color: balance >= 0 ? '#065f46' : '#991b1b' }}>{formatMoney(balance)}</div>
+                <div style={{ fontSize: '2.5rem', fontWeight: 700, color: balance >= 0 ? '#065f46' : '#991b1b' }}>{formatCurrencyFCFA(balance)}</div>
                 <div style={{ fontSize: '0.85rem', color: balance >= 0 ? '#065f46' : '#991b1b', marginTop: '0.25rem' }}>{balance >= 0 ? 'Excédent' : 'Déficit'}</div>
               </div>
               <table className="sol-table">
                 <thead><tr><th>Type</th><th>Montant</th></tr></thead>
                 <tbody>
-                  <tr><td style={{ fontWeight: 600 }}>Total recettes</td><td style={{ fontWeight: 700, color: '#065f46' }}>{formatMoney(totalIncome)}</td></tr>
-                  <tr><td style={{ fontWeight: 600 }}>Total dépenses</td><td style={{ fontWeight: 700, color: '#991b1b' }}>{formatMoney(totalExpense)}</td></tr>
-                  <tr><td style={{ fontWeight: 700 }}>Bilan</td><td style={{ fontWeight: 700, color: balance >= 0 ? '#065f46' : '#991b1b' }}>{formatMoney(balance)}</td></tr>
+                  <tr><td style={{ fontWeight: 600 }}>Total recettes</td><td style={{ fontWeight: 700, color: '#065f46' }}>{formatCurrencyFCFA(totalIncome)}</td></tr>
+                  <tr><td style={{ fontWeight: 600 }}>Total dépenses</td><td style={{ fontWeight: 700, color: '#991b1b' }}>{formatCurrencyFCFA(totalExpense)}</td></tr>
+                  <tr><td style={{ fontWeight: 700 }}>Bilan</td><td style={{ fontWeight: 700, color: balance >= 0 ? '#065f46' : '#991b1b' }}>{formatCurrencyFCFA(balance)}</td></tr>
                 </tbody>
               </table>
             </div>

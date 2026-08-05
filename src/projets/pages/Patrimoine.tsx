@@ -1,6 +1,6 @@
 import { Building2, MapPin, Calendar, TrendingUp } from 'lucide-react'
 import { mockHeritage, mockProjects } from '../mockData'
-import { formatMoney, EmptyState } from '../ui'
+import { formatMoney, EmptyState, kpiValueSizeClass } from '../ui'
 
 export default function Patrimoine() {
   const totalValue = mockHeritage.reduce((s, h) => s + h.value, 0)
@@ -17,7 +17,7 @@ export default function Patrimoine() {
       <div className="sol-kpi" style={{ marginBottom: '1.5rem', maxWidth: '350px' }}>
         <div className="sol-kpi-icon" style={{ background: '#e0e7ff', color: '#3730a3' }}><Building2 size={24} /></div>
         <div>
-          <div className="sol-kpi-value">{formatMoney(totalValue)}</div>
+          <div className={`sol-kpi-value ${kpiValueSizeClass(formatMoney(totalValue))}`}>{formatMoney(totalValue)}</div>
           <div className="sol-kpi-label">Valeur totale du patrimoine</div>
         </div>
       </div>

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Plus, Wallet, TrendingDown } from 'lucide-react'
 import { mockBudgets } from '../mockData'
 import { useToast } from '../toast'
-import { Modal, ProgressBar, formatMoney, EmptyState, KpiCard } from '../ui'
+import { Modal, ProgressBar, formatCurrencyFCFA, EmptyState, KpiCard } from '../ui'
 import type { Budget } from '../types'
 
 export default function Budgets() {
@@ -33,10 +33,10 @@ export default function Budgets() {
         </button>
       </div>
 
-      <div className="grid-3" style={{ marginBottom: '1.5rem' }}>
-        <KpiCard icon={Wallet} label="Total prévu" value={formatMoney(totalPlanned)} bg="#dbeafe" color="#1e40af" />
-        <KpiCard icon={TrendingDown} label="Total dépensé" value={formatMoney(totalSpent)} bg="#fee2e2" color="#991b1b" />
-        <KpiCard icon={Wallet} label="Solde disponible" value={formatMoney(totalBalance)} bg="#d1fae5" color="#065f46" />
+      <div className="kpi-grid" style={{ marginBottom: '1.5rem' }}>
+        <KpiCard icon={Wallet} label="Total prévu" value={formatCurrencyFCFA(totalPlanned)} bg="#dbeafe" color="#1e40af" />
+        <KpiCard icon={TrendingDown} label="Total dépensé" value={formatCurrencyFCFA(totalSpent)} bg="#fee2e2" color="#991b1b" />
+        <KpiCard icon={Wallet} label="Solde disponible" value={formatCurrencyFCFA(totalBalance)} bg="#d1fae5" color="#065f46" />
       </div>
 
       {budgets.length === 0 ? <EmptyState message="Aucun budget défini." /> : (
@@ -61,14 +61,14 @@ export default function Budgets() {
                 </div>
                 <div style={{ marginBottom: '0.5rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--color-neutral-500)' }}>Prévu: <strong style={{ color: 'var(--color-neutral-800)' }}>{formatMoney(b.planned)}</strong></span>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--color-neutral-500)' }}>Dépensé: <strong style={{ color: '#991b1b' }}>{formatMoney(b.spent)}</strong></span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--color-neutral-500)' }}>Prévu: <strong style={{ color: 'var(--color-neutral-800)' }}>{formatCurrencyFCFA(b.planned)}</strong></span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--color-neutral-500)' }}>Dépensé: <strong style={{ color: '#991b1b' }}>{formatCurrencyFCFA(b.spent)}</strong></span>
                   </div>
                   <ProgressBar value={b.spent} max={b.planned} color={pct >= 80 ? '#ef4444' : b.color} />
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginTop: '0.5rem' }}>
                   <span style={{ color: 'var(--color-neutral-500)' }}>Solde:</span>
-                  <span style={{ fontWeight: 700, color: balance >= 0 ? '#065f46' : '#991b1b' }}>{formatMoney(balance)}</span>
+                  <span style={{ fontWeight: 700, color: balance >= 0 ? '#065f46' : '#991b1b' }}>{formatCurrencyFCFA(balance)}</span>
                 </div>
               </div>
             )

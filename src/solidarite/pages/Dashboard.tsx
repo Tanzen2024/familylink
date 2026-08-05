@@ -1,6 +1,6 @@
 import { HelpCircle, CheckCircle2, PiggyBank, Calendar, TrendingUp, ArrowRight } from 'lucide-react'
 import { mockRequests, mockCollections, mockHistory } from '../mockData'
-import { CategoryBadge, StatusBadge, formatMoney, ProgressBar } from '../ui'
+import { CategoryBadge, StatusBadge, formatMoney, ProgressBar, kpiValueSizeClass } from '../ui'
 
 export default function Dashboard({ onNavigate }: { onNavigate: (page: string) => void }) {
   const openCount = mockRequests.filter((r) => r.status === 'Nouvelle' || r.status === 'En cours').length
@@ -44,16 +44,17 @@ export default function Dashboard({ onNavigate }: { onNavigate: (page: string) =
         </div>
       </div>
 
-      <div className="grid-4" style={{ marginBottom: '1.5rem' }}>
+      <div className="kpi-grid" style={{ marginBottom: '1.5rem' }}>
         {kpis.map((kpi) => {
           const Icon = kpi.icon
+          const value = String(kpi.value)
           return (
             <div key={kpi.label} className="sol-kpi">
               <div className="sol-kpi-icon" style={{ background: kpi.bg, color: kpi.color }}>
                 <Icon size={24} />
               </div>
               <div>
-                <div className="sol-kpi-value">{kpi.value}</div>
+                <div className={`sol-kpi-value ${kpiValueSizeClass(value)}`}>{value}</div>
                 <div className="sol-kpi-label">{kpi.label}</div>
               </div>
             </div>

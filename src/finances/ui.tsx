@@ -59,13 +59,21 @@ export function EmptyState({ message }: { message: string }) {
 }
 
 // Un montant financier peut aller de "0 FCFA" à "1 250 000 000 FCFA" (voire plus).
-// Cette échelle réduit progressivement la police à mesure que le texte s'allonge,
-// pour qu'il reste toujours entièrement visible dans la carte KPI sans jamais dépendre
-// d'un seul palier binaire (source du débordement précédent sur les valeurs à 14-16 caractères).
+// Cette échelle réduit progressivement la police à mesure que le texte s'allonge — jamais
+// par paliers binaires trop larges — pour qu'il reste toujours entièrement visible, sur une
+// seule ligne, sans jamais recourir à un troncage (overflow/ellipsis). Les seuils sont
+// calibrés pour la largeur minimale garantie d'une carte KPI (voir `.kpi-grid`,
+// `minmax(260px, 1fr)`) : à cette largeur plancher, chaque palier a été vérifié pour
+// laisser suffisamment de place à sa police avant de passer au palier suivant, plus petit.
+// Fonction identique (dupliquée volontairement) dans solidarite/ui.tsx et projets/ui.tsx,
+// qui suivent chacun leur propre kit UI indépendant plutôt qu'un composant partagé.
 function kpiValueSizeClass(value: string): string {
-  if (value.length > 20) return 'sol-kpi-value-xs'
-  if (value.length > 16) return 'sol-kpi-value-sm'
-  if (value.length > 12) return 'sol-kpi-value-md'
+  const len = value.length
+  if (len > 24) return 'sol-kpi-value-xxs'
+  if (len > 20) return 'sol-kpi-value-xs'
+  if (len > 16) return 'sol-kpi-value-sm'
+  if (len > 13) return 'sol-kpi-value-md'
+  if (len > 11) return 'sol-kpi-value-lg'
   return ''
 }
 
@@ -106,8 +114,15 @@ export function KpiCard({ icon: Icon, label, value, bg, color, onClick, style }:
   return <div className="sol-kpi" style={style}>{inner}</div>
 }
 
-export function formatMoney(amount: number): string {
-  return new Intl.NumberFormat('fr-FR').format(amount) + ' FCFA'
+// Fonction utilitaire unique pour tout montant FCFA affiché dans le module Finances.
+// Le séparateur de milliers (espace fine insécable, déjà produite par Intl.NumberFormat
+// en fr-FR) et le "\u202F" (espace fine insécable, écrite en séquence d'échappement pour
+// rester un caractère ASCII lisible dans le code source) avant "FCFA" sont tous deux
+// insécables : le navigateur ne peut jamais couper la ligne à l'intérieur d'un montant,
+// ni entre le nombre et son suffixe — quel que soit le conteneur qui l'affiche.
+export function formatCurrencyFCFA(amount: number): string {
+  const formatted = new Intl.NumberFormat('fr-FR').format(amount)
+  return formatted + '\u202FFCFA'
 }
 
 export function formatMoneyShort(amount: number): string {

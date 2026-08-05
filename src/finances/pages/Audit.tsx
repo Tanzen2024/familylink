@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Search, ShieldCheck, User, FileText } from 'lucide-react'
 import { mockAuditEntries } from '../mockData'
-import { formatMoney, EmptyState } from '../ui'
+import { formatCurrencyFCFA, EmptyState } from '../ui'
 
 export default function Audit() {
   const [search, setSearch] = useState('')
@@ -56,7 +56,7 @@ export default function Audit() {
                     <div className="sol-timeline-title">{e.action}</div>
                     <div className="sol-timeline-desc">
                       <span style={{ fontWeight: 500 }}>{e.actor}</span> - {e.entity}
-                      {e.amount !== null && <span style={{ marginLeft: '0.5rem', fontWeight: 600, color: 'var(--color-primary-600)' }}>{formatMoney(e.amount)}</span>}
+                      {e.amount !== null && <span style={{ marginLeft: '0.5rem', fontWeight: 600, color: 'var(--color-primary-600)' }}>{formatCurrencyFCFA(e.amount)}</span>}
                     </div>
                     <div style={{ display: 'flex', gap: '1rem', marginTop: '0.25rem', fontSize: '0.8rem' }}>
                       <span style={{ color: 'var(--color-neutral-500)' }}>Ancienne valeur: <strong>{e.oldValue}</strong></span>

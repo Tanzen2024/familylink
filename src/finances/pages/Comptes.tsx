@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Landmark, ArrowDownCircle, ArrowUpCircle, Plus, Phone } from 'lucide-react'
 import { mockAccounts } from '../mockData'
 import { useToast } from '../toast'
-import { Modal, formatMoney, EmptyState, KpiCard } from '../ui'
+import { Modal, formatCurrencyFCFA, EmptyState, KpiCard } from '../ui'
 import type { BankAccount, AccountType } from '../types'
 
 export default function Comptes() {
@@ -39,7 +39,7 @@ export default function Comptes() {
       <KpiCard
         icon={Landmark}
         label="Solde total"
-        value={formatMoney(totalBalance)}
+        value={formatCurrencyFCFA(totalBalance)}
         bg="#dbeafe"
         color="#1e40af"
         style={{ marginBottom: '1.5rem', maxWidth: '300px' }}
@@ -58,7 +58,7 @@ export default function Comptes() {
                   <div style={{ fontSize: '0.8rem', color: 'var(--color-neutral-500)' }}>{a.type}</div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--color-primary-600)' }}>{formatMoney(a.balance)}</div>
+                  <div style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--color-primary-600)' }}>{formatCurrencyFCFA(a.balance)}</div>
                 </div>
               </div>
               {a.iban && <div style={{ fontSize: '0.8rem', color: 'var(--color-neutral-500)', marginBottom: '0.25rem' }}>IBAN: {a.iban}</div>}
@@ -71,7 +71,7 @@ export default function Comptes() {
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
                       {op.type === 'credit' ? <ArrowDownCircle size={16} style={{ color: '#065f46' }} /> : <ArrowUpCircle size={16} style={{ color: '#991b1b' }} />}
                       <span style={{ flex: 1, fontSize: '0.85rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{op.label}</span>
-                      <span style={{ fontSize: '0.85rem', fontWeight: 600, color: op.type === 'credit' ? '#065f46' : '#991b1b' }}>{op.type === 'credit' ? '+' : '-'}{formatMoney(op.amount)}</span>
+                      <span style={{ fontSize: '0.85rem', fontWeight: 600, color: op.type === 'credit' ? '#065f46' : '#991b1b' }}>{op.type === 'credit' ? '+' : '-'}{formatCurrencyFCFA(op.amount)}</span>
                     </div>
                   ))}
                 </div>
@@ -111,7 +111,7 @@ function AccountDetail({ account, onClose }: { account: BankAccount; onClose: ()
   return (
     <Modal title={account.name} onClose={onClose} maxWidth="600px">
       <div className="sol-info-row"><span className="sol-info-label">Type</span><span className="sol-info-value">{account.type}</span></div>
-      <div className="sol-info-row"><span className="sol-info-label">Solde</span><span className="sol-info-value" style={{ fontWeight: 700, color: 'var(--color-primary-600)' }}>{formatMoney(account.balance)}</span></div>
+      <div className="sol-info-row"><span className="sol-info-label">Solde</span><span className="sol-info-value" style={{ fontWeight: 700, color: 'var(--color-primary-600)' }}>{formatCurrencyFCFA(account.balance)}</span></div>
       {account.iban && <div className="sol-info-row"><span className="sol-info-label">IBAN</span><span className="sol-info-value" style={{ fontSize: '0.8rem' }}>{account.iban}</span></div>}
       {account.phone && <div className="sol-info-row"><span className="sol-info-label">Téléphone</span><span className="sol-info-value">{account.phone}</span></div>}
       {account.operations.length > 0 && (
@@ -124,7 +124,7 @@ function AccountDetail({ account, onClose }: { account: BankAccount; onClose: ()
                 <div style={{ fontSize: '0.85rem' }}>{op.label}</div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--color-neutral-500)' }}>{new Date(op.date).toLocaleDateString('fr-FR')}</div>
               </div>
-              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: op.type === 'credit' ? '#065f46' : '#991b1b' }}>{op.type === 'credit' ? '+' : '-'}{formatMoney(op.amount)}</span>
+              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: op.type === 'credit' ? '#065f46' : '#991b1b' }}>{op.type === 'credit' ? '+' : '-'}{formatCurrencyFCFA(op.amount)}</span>
             </div>
           ))}
         </div>

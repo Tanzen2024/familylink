@@ -51,11 +51,26 @@ export function EmptyState({ message }: { message: string }) {
 }
 
 export function formatMoney(amount: number): string {
-  return new Intl.NumberFormat('fr-FR').format(amount) + ' FCFA'
+  const formatted = new Intl.NumberFormat('fr-FR').format(amount)
+  return formatted + '\u202FFCFA'
 }
 
 export function formatMoneyShort(amount: number): string {
   if (amount >= 1000000) return (amount / 1000000).toFixed(1) + 'M'
   if (amount >= 1000) return (amount / 1000).toFixed(0) + 'K'
   return String(amount)
+}
+
+// Réduit progressivement la police d'une valeur de carte KPI à mesure que le texte
+// s'allonge, pour qu'un montant reste toujours visible sur une seule ligne — calibré
+// pour la largeur plancher garantie par `.kpi-grid` (260px). Voir `src/finances/ui.tsx`
+// pour le détail du calcul, identique dans les trois modules (même gabarit `.sol-kpi`).
+export function kpiValueSizeClass(value: string): string {
+  const len = value.length
+  if (len > 24) return 'sol-kpi-value-xxs'
+  if (len > 20) return 'sol-kpi-value-xs'
+  if (len > 16) return 'sol-kpi-value-sm'
+  if (len > 13) return 'sol-kpi-value-md'
+  if (len > 11) return 'sol-kpi-value-lg'
+  return ''
 }

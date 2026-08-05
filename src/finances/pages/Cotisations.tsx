@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react'
 import { Plus, Search, Bell, CheckCircle2, Clock } from 'lucide-react'
 import { mockContributions } from '../mockData'
 import { useToast } from '../toast'
-import { Modal, ContributionStatusBadge, formatMoney, EmptyState, KpiCard } from '../ui'
+import { Modal, ContributionStatusBadge, formatCurrencyFCFA, EmptyState, KpiCard } from '../ui'
 import type { Contribution, ContributionStatus } from '../types'
 
 const STATUSES: ContributionStatus[] = ['En attente', 'Partiellement payé', 'Payé', 'En retard']
@@ -53,9 +53,9 @@ export default function Cotisations() {
       </div>
 
       {/* Summary KPIs */}
-      <div className="grid-4" style={{ marginBottom: '1.5rem' }}>
-        <KpiCard icon={Clock} label="Montant attendu" value={formatMoney(totalExpected)} bg="#dbeafe" color="#1e40af" />
-        <KpiCard icon={CheckCircle2} label="Montant payé" value={formatMoney(totalPaid)} bg="#d1fae5" color="#065f46" />
+      <div className="kpi-grid" style={{ marginBottom: '1.5rem' }}>
+        <KpiCard icon={Clock} label="Montant attendu" value={formatCurrencyFCFA(totalExpected)} bg="#dbeafe" color="#1e40af" />
+        <KpiCard icon={CheckCircle2} label="Montant payé" value={formatCurrencyFCFA(totalPaid)} bg="#d1fae5" color="#065f46" />
         <KpiCard icon={CheckCircle2} label="Membres à jour" value={String(paidCount)} bg="#d1fae5" color="#065f46" />
         <KpiCard icon={Clock} label="Membres en retard" value={String(lateCount)} bg="#fee2e2" color="#991b1b" />
       </div>
@@ -87,9 +87,9 @@ export default function Cotisations() {
                     <td style={{ fontWeight: 600, fontSize: '0.8rem' }}>{c.number}</td>
                     <td style={{ fontWeight: 500 }}>{c.member}</td>
                     <td>{c.fiscalYear}</td>
-                    <td>{formatMoney(c.expectedAmount)}</td>
-                    <td style={{ color: '#065f46', fontWeight: 500 }}>{formatMoney(c.paidAmount)}</td>
-                    <td style={{ color: balance > 0 ? '#991b1b' : 'var(--color-neutral-500)' }}>{formatMoney(balance)}</td>
+                    <td>{formatCurrencyFCFA(c.expectedAmount)}</td>
+                    <td style={{ color: '#065f46', fontWeight: 500 }}>{formatCurrencyFCFA(c.paidAmount)}</td>
+                    <td style={{ color: balance > 0 ? '#991b1b' : 'var(--color-neutral-500)' }}>{formatCurrencyFCFA(balance)}</td>
                     <td>{new Date(c.dueDate).toLocaleDateString('fr-FR')}</td>
                     <td>{c.paymentDate ? new Date(c.paymentDate).toLocaleDateString('fr-FR') : '—'}</td>
                     <td><ContributionStatusBadge status={c.status} /></td>

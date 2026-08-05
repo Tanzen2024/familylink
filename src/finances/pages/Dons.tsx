@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Plus, Gift, TrendingUp, FileText } from 'lucide-react'
 import { mockDonations } from '../mockData'
 import { useToast } from '../toast'
-import { Modal, formatMoney, EmptyState, KpiCard } from '../ui'
+import { Modal, formatCurrencyFCFA, EmptyState, KpiCard } from '../ui'
 import type { Donation } from '../types'
 
 export default function Dons() {
@@ -19,7 +19,7 @@ export default function Dons() {
     const newDon: Donation = { ...data, id: `d${Date.now()}`, date: new Date().toISOString().slice(0, 10), receiptNumber: num }
     setDonations((prev) => [newDon, ...prev])
     setShowForm(false)
-    notify('success', 'Don enregistré', `${formatMoney(data.amount)} de ${data.donor}. Reçu ${num}.`)
+    notify('success', 'Don enregistré', `${formatCurrencyFCFA(data.amount)} de ${data.donor}. Reçu ${num}.`)
   }
 
   return (
@@ -34,8 +34,8 @@ export default function Dons() {
         </button>
       </div>
 
-      <div className="grid-3" style={{ marginBottom: '1.5rem' }}>
-        <KpiCard icon={Gift} label="Total des dons" value={formatMoney(totalAmount)} bg="#fce7f3" color="#9d174d" />
+      <div className="kpi-grid" style={{ marginBottom: '1.5rem' }}>
+        <KpiCard icon={Gift} label="Total des dons" value={formatCurrencyFCFA(totalAmount)} bg="#fce7f3" color="#9d174d" />
         <KpiCard icon={TrendingUp} label="Donateurs" value={String(uniqueDonors)} bg="#dbeafe" color="#1e40af" />
         <KpiCard icon={FileText} label="Projets soutenus" value={String(projects)} bg="#d1fae5" color="#065f46" />
       </div>
@@ -49,7 +49,7 @@ export default function Dons() {
                 <tr key={d.id}>
                   <td style={{ fontWeight: 600, fontSize: '0.8rem' }}>{d.receiptNumber}</td>
                   <td style={{ fontWeight: 500 }}>{d.donor}</td>
-                  <td style={{ fontWeight: 700, color: '#9d174d' }}>{formatMoney(d.amount)}</td>
+                  <td style={{ fontWeight: 700, color: '#9d174d' }}>{formatCurrencyFCFA(d.amount)}</td>
                   <td>{new Date(d.date).toLocaleDateString('fr-FR')}</td>
                   <td>{d.project}</td>
                   <td>{d.allocation}</td>

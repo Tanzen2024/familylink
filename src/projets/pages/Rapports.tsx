@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { FileBarChart, Download, FolderKanban, Lightbulb, Hammer, CheckCircle2, Building2, TrendingUp } from 'lucide-react'
 import { useToast } from '../toast'
-import { formatMoney, formatMoneyShort, ProgressBar } from '../ui'
+import { formatMoney, formatMoneyShort, ProgressBar, kpiValueSizeClass } from '../ui'
 import { mockProjects, mockIdeas, mockHeritage, mockCategories } from '../mockData'
 
 type ReportType = 'overview' | 'ideas' | 'projects' | 'budget' | 'heritage'
@@ -71,11 +71,11 @@ export default function Rapports() {
 
           {selected === 'overview' && (
             <div>
-              <div className="grid-4" style={{ marginBottom: '1.5rem' }}>
-                <div className="sol-kpi"><div className="sol-kpi-icon" style={{ background: '#dbeafe', color: '#1e40af' }}><FolderKanban size={20} /></div><div><div className="sol-kpi-value">{mockProjects.length}</div><div className="sol-kpi-label">Projets</div></div></div>
-                <div className="sol-kpi"><div className="sol-kpi-icon" style={{ background: '#fef3c7', color: '#92400e' }}><Lightbulb size={20} /></div><div><div className="sol-kpi-value">{mockIdeas.length}</div><div className="sol-kpi-label">Idées</div></div></div>
-                <div className="sol-kpi"><div className="sol-kpi-icon" style={{ background: '#d1fae5', color: '#065f46' }}><Building2 size={20} /></div><div><div className="sol-kpi-value">{mockHeritage.length}</div><div className="sol-kpi-label">Patrimoine</div></div></div>
-                <div className="sol-kpi"><div className="sol-kpi-icon" style={{ background: '#fce7f3', color: '#9d174d' }}><TrendingUp size={20} /></div><div><div className="sol-kpi-value" style={{ fontSize: '1.1rem' }}>{formatMoneyShort(totalBudget)}</div><div className="sol-kpi-label">Budget total</div></div></div>
+              <div className="kpi-grid" style={{ marginBottom: '1.5rem' }}>
+                <div className="sol-kpi"><div className="sol-kpi-icon" style={{ background: '#dbeafe', color: '#1e40af' }}><FolderKanban size={20} /></div><div><div className={`sol-kpi-value ${kpiValueSizeClass(String(mockProjects.length))}`}>{mockProjects.length}</div><div className="sol-kpi-label">Projets</div></div></div>
+                <div className="sol-kpi"><div className="sol-kpi-icon" style={{ background: '#fef3c7', color: '#92400e' }}><Lightbulb size={20} /></div><div><div className={`sol-kpi-value ${kpiValueSizeClass(String(mockIdeas.length))}`}>{mockIdeas.length}</div><div className="sol-kpi-label">Idées</div></div></div>
+                <div className="sol-kpi"><div className="sol-kpi-icon" style={{ background: '#d1fae5', color: '#065f46' }}><Building2 size={20} /></div><div><div className={`sol-kpi-value ${kpiValueSizeClass(String(mockHeritage.length))}`}>{mockHeritage.length}</div><div className="sol-kpi-label">Patrimoine</div></div></div>
+                <div className="sol-kpi"><div className="sol-kpi-icon" style={{ background: '#fce7f3', color: '#9d174d' }}><TrendingUp size={20} /></div><div><div className={`sol-kpi-value ${kpiValueSizeClass(formatMoneyShort(totalBudget))}`}>{formatMoneyShort(totalBudget)}</div><div className="sol-kpi-label">Budget total</div></div></div>
               </div>
               <table className="sol-table">
                 <thead><tr><th>Projet</th><th>Statut</th><th>Budget</th><th>Dépensé</th><th>Progression</th></tr></thead>

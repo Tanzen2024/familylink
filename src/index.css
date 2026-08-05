@@ -1882,15 +1882,33 @@ button:focus-visible,
 }
 
 .sol-kpi {
+  width: 100%;
+  min-width: 0;
   background: var(--color-surface);
   border-radius: var(--radius-md);
   border: 1px solid var(--color-neutral-200);
   box-shadow: var(--shadow-xs);
-  padding: 1.375rem 1.5rem;
+  /* Padding réduit (2ᵉ niveau de correction anti-débordement, après la police) par
+     rapport à l'ancien 1.375rem/1.5rem : libère de la place pour le montant sans
+     toucher aux autres textes de la carte (label, icône). */
+  padding: 1.25rem 1rem;
   display: flex;
   align-items: center;
   gap: 1rem;
+  text-align: left;
   transition: box-shadow var(--transition-fast), transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+/* Grille des cartes KPI (Solidarité, Finances, Projets) : `minmax(260px, 1fr)`
+   garantit une largeur plancher à chaque carte — contrairement à `repeat(4, 1fr)`,
+   qui n'impose aucun minimum et pouvait écraser les cartes en dessous de la largeur
+   nécessaire à un montant long. Si l'espace ne permet plus 4 colonnes de 260px, la
+   grille passe automatiquement à 3, 2 puis 1 colonne(s) — 3ᵉ niveau de correction
+   (largeur/disposition), utilisé seulement quand la police (1er niveau) ne suffit plus. */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
 }
 
 .sol-kpi:hover {
@@ -1910,10 +1928,37 @@ button:focus-visible,
 }
 
 .sol-kpi-value {
+  /* Le montant reste toujours sur une seule ligne et entièrement visible : jamais
+     d'overflow/ellipsis qui masquerait du texte. La réduction de police par palier
+     (ci-dessous, 1er niveau de correction) est calibrée pour suffire à elle seule,
+     à la largeur plancher garantie par `.kpi-grid` (260px). */
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--color-neutral-900);
-  line-height: 1.2;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.sol-kpi-value-lg {
+  font-size: 1.5rem;
+}
+
+.sol-kpi-value-md {
+  font-size: 1.25rem;
+}
+
+.sol-kpi-value-sm {
+  font-size: 1rem;
+}
+
+.sol-kpi-value-xs {
+  font-size: 0.85rem;
+  letter-spacing: -0.01em;
+}
+
+.sol-kpi-value-xxs {
+  font-size: 0.72rem;
+  letter-spacing: -0.02em;
 }
 
 .sol-kpi-label {
@@ -2456,30 +2501,6 @@ button:focus-visible,
   font-weight: 700;
   color: var(--color-neutral-900);
   margin-bottom: 1.25rem;
-}
-
-.finances .sol-kpi {
-  width: 100%;
-  min-width: 0;
-  text-align: left;
-}
-
-.finances .sol-kpi-value {
-  overflow-wrap: break-word;
-  word-break: break-word;
-  hyphens: auto;
-}
-
-.finances .sol-kpi-value-md {
-  font-size: 1.4rem;
-}
-
-.finances .sol-kpi-value-sm {
-  font-size: 1.15rem;
-}
-
-.finances .sol-kpi-value-xs {
-  font-size: 0.95rem;
 }
 
 .fin-donut {

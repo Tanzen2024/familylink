@@ -3,7 +3,7 @@ import {
   ArrowRight, TrendingUp, Users, ThumbsUp, MessageCircle, Vote,
 } from 'lucide-react'
 import { mockProjects, mockIdeas, mockHeritage } from '../mockData'
-import { formatMoney, formatMoneyShort, ProgressBar, ProjectStatusBadge } from '../ui'
+import { formatMoney, formatMoneyShort, ProgressBar, ProjectStatusBadge, kpiValueSizeClass } from '../ui'
 
 export default function Dashboard({ onNavigate }: { onNavigate: (page: string) => void }) {
   const planifies = mockProjects.filter((p) => p.status === 'Planifié')
@@ -62,7 +62,7 @@ export default function Dashboard({ onNavigate }: { onNavigate: (page: string) =
       </div>
 
       {/* KPIs */}
-      <div className="grid-3" style={{ marginBottom: '1.5rem' }}>
+      <div className="kpi-grid" style={{ marginBottom: '1.5rem' }}>
         {kpis.map((kpi) => {
           const Icon = kpi.icon
           return (
@@ -71,7 +71,7 @@ export default function Dashboard({ onNavigate }: { onNavigate: (page: string) =
                 <Icon size={24} />
               </div>
               <div>
-                <div className="sol-kpi-value">{kpi.value}</div>
+                <div className={`sol-kpi-value ${kpiValueSizeClass(kpi.value)}`}>{kpi.value}</div>
                 <div className="sol-kpi-label">{kpi.label}</div>
               </div>
             </div>

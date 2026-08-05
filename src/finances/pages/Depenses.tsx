@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react'
 import { Plus, Search, TrendingDown, CheckCircle2, XCircle, Paperclip } from 'lucide-react'
 import { mockExpenses } from '../mockData'
 import { useToast } from '../toast'
-import { Modal, ExpenseCategoryBadge, formatMoney, EmptyState, KpiCard } from '../ui'
+import { Modal, ExpenseCategoryBadge, formatCurrencyFCFA, EmptyState, KpiCard } from '../ui'
 import type { Expense, ExpenseCategory } from '../types'
 
 const CATEGORIES: ExpenseCategory[] = ['Solidarité', 'Projet', 'Fonctionnement', 'Communication', 'Formation', 'Événements', 'Administration']
@@ -42,7 +42,7 @@ export default function Depenses() {
     }
     setExpenses((prev) => [newExp, ...prev])
     setShowForm(false)
-    notify('success', 'Dépense créée', `${num} - ${formatMoney(data.amount)} pour ${data.beneficiary}.`)
+    notify('success', 'Dépense créée', `${num} - ${formatCurrencyFCFA(data.amount)} pour ${data.beneficiary}.`)
   }
 
   return (
@@ -57,9 +57,9 @@ export default function Depenses() {
         </button>
       </div>
 
-      <div className="grid-3" style={{ marginBottom: '1.5rem' }}>
-        <KpiCard icon={TrendingDown} label="Total filtré" value={formatMoney(total)} bg="#fee2e2" color="#991b1b" />
-        <KpiCard icon={CheckCircle2} label="Dépenses validées" value={formatMoney(validatedTotal)} bg="#d1fae5" color="#065f46" />
+      <div className="kpi-grid" style={{ marginBottom: '1.5rem' }}>
+        <KpiCard icon={TrendingDown} label="Total filtré" value={formatCurrencyFCFA(total)} bg="#fee2e2" color="#991b1b" />
+        <KpiCard icon={CheckCircle2} label="Dépenses validées" value={formatCurrencyFCFA(validatedTotal)} bg="#d1fae5" color="#065f46" />
         <KpiCard icon={XCircle} label="En attente de validation" value={String(pendingCount)} bg="#fef3c7" color="#92400e" />
       </div>
 
@@ -92,7 +92,7 @@ export default function Depenses() {
                   <td><ExpenseCategoryBadge category={e.category} /></td>
                   <td style={{ fontSize: '0.85rem', color: 'var(--color-neutral-500)' }}>{e.project ?? '—'}</td>
                   <td style={{ fontWeight: 500 }}>{e.beneficiary}</td>
-                  <td style={{ fontWeight: 700, color: '#991b1b' }}>{formatMoney(e.amount)}</td>
+                  <td style={{ fontWeight: 700, color: '#991b1b' }}>{formatCurrencyFCFA(e.amount)}</td>
                   <td>{new Date(e.date).toLocaleDateString('fr-FR')}</td>
                   <td>{e.receipt ? <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--color-primary-600)' }}><Paperclip size={14} /> {e.receipt}</span> : '—'}</td>
                   <td>

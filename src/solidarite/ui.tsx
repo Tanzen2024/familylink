@@ -60,5 +60,20 @@ export function EmptyState({ message }: { message: string }) {
 }
 
 export function formatMoney(amount: number): string {
-  return new Intl.NumberFormat('fr-FR').format(amount) + ' FCFA'
+  const formatted = new Intl.NumberFormat('fr-FR').format(amount)
+  return formatted + '\u202FFCFA'
+}
+
+// R\u00E9duit progressivement la police d'une valeur de carte KPI \u00E0 mesure que le texte
+// s'allonge, pour qu'un montant reste toujours visible sur une seule ligne \u2014 calibr\u00E9
+// pour la largeur plancher garantie par `.kpi-grid` (260px). Voir `src/finances/ui.tsx`
+// pour le d\u00E9tail du calcul, identique dans les trois modules (m\u00EAme gabarit `.sol-kpi`).
+export function kpiValueSizeClass(value: string): string {
+  const len = value.length
+  if (len > 24) return 'sol-kpi-value-xxs'
+  if (len > 20) return 'sol-kpi-value-xs'
+  if (len > 16) return 'sol-kpi-value-sm'
+  if (len > 13) return 'sol-kpi-value-md'
+  if (len > 11) return 'sol-kpi-value-lg'
+  return ''
 }

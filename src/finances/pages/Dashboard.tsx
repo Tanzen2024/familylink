@@ -7,7 +7,7 @@ import {
   mockContributions, mockDonations, mockFinCollections, mockExpenses,
   mockIncomes, mockAccounts, monthlyIncomeData, monthlyExpenseData,
 } from '../mockData'
-import { formatMoney, formatMoneyShort, KpiCard } from '../ui'
+import { formatCurrencyFCFA, formatMoneyShort, KpiCard } from '../ui'
 
 // Teintes bg/texte réutilisées par plusieurs KPI et par les opérations récentes —
 // centralisées ici plutôt que répétées en dur à chaque usage (voir .finances en CSS).
@@ -30,12 +30,12 @@ export default function Dashboard({ onNavigate }: { onNavigate: (page: string) =
   const lateCount = mockContributions.filter((c) => c.status === 'En retard').length
 
   const kpis = [
-    { label: 'Solde actuel', value: formatMoney(totalBalance), icon: Wallet, ...FIN_TINTS.blue, nav: 'comptes' },
-    { label: 'Total cotisations', value: formatMoney(totalContributions), icon: Users, ...FIN_TINTS.green, nav: 'cotisations' },
-    { label: 'Total dons', value: formatMoney(totalDonations), icon: Gift, ...FIN_TINTS.pink, nav: 'dons' },
-    { label: 'Total collectes', value: formatMoney(totalCollections), icon: PiggyBank, ...FIN_TINTS.amber, nav: 'collectes' },
-    { label: 'Recettes du mois', value: formatMoney(monthIncomes), icon: TrendingUp, ...FIN_TINTS.green, nav: 'recettes' },
-    { label: 'Dépenses du mois', value: formatMoney(monthExpenses), icon: TrendingDown, ...FIN_TINTS.red, nav: 'depenses' },
+    { label: 'Solde actuel', value: formatCurrencyFCFA(totalBalance), icon: Wallet, ...FIN_TINTS.blue, nav: 'comptes' },
+    { label: 'Total cotisations', value: formatCurrencyFCFA(totalContributions), icon: Users, ...FIN_TINTS.green, nav: 'cotisations' },
+    { label: 'Total dons', value: formatCurrencyFCFA(totalDonations), icon: Gift, ...FIN_TINTS.pink, nav: 'dons' },
+    { label: 'Total collectes', value: formatCurrencyFCFA(totalCollections), icon: PiggyBank, ...FIN_TINTS.amber, nav: 'collectes' },
+    { label: 'Recettes du mois', value: formatCurrencyFCFA(monthIncomes), icon: TrendingUp, ...FIN_TINTS.green, nav: 'recettes' },
+    { label: 'Dépenses du mois', value: formatCurrencyFCFA(monthExpenses), icon: TrendingDown, ...FIN_TINTS.red, nav: 'depenses' },
     { label: 'Membres à jour', value: `${upToDateCount} / ${mockContributions.length}`, icon: CheckCircle2, ...FIN_TINTS.green, nav: 'cotisations' },
     { label: 'Membres en retard', value: String(lateCount), icon: AlertCircle, ...FIN_TINTS.red, nav: 'cotisations' },
   ]
@@ -81,7 +81,7 @@ export default function Dashboard({ onNavigate }: { onNavigate: (page: string) =
       </div>
 
       {/* KPIs */}
-      <div className="grid-4" style={{ marginBottom: '1.5rem' }}>
+      <div className="kpi-grid" style={{ marginBottom: '1.5rem' }}>
         {kpis.map((kpi) => (
           <KpiCard
             key={kpi.label}

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Plus, PiggyBank, Users, Lock, Unlock } from 'lucide-react'
 import { mockFinCollections } from '../mockData'
 import { useToast } from '../toast'
-import { Modal, ProgressBar, formatMoney, EmptyState } from '../ui'
+import { Modal, ProgressBar, formatCurrencyFCFA, EmptyState } from '../ui'
 import type { FinanceCollection } from '../types'
 
 export default function Collectes() {
@@ -61,8 +61,8 @@ export default function Collectes() {
                 <p style={{ fontSize: '0.85rem', color: 'var(--color-neutral-600)', marginBottom: '0.75rem', lineHeight: 1.5 }}>{c.description}</p>
                 <div style={{ marginBottom: '0.25rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                    <span style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--color-primary-600)' }}>{formatMoney(c.collectedAmount)}</span>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--color-neutral-500)' }}>/ {formatMoney(c.targetAmount)}</span>
+                    <span style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--color-primary-600)' }}>{formatCurrencyFCFA(c.collectedAmount)}</span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--color-neutral-500)' }}>/ {formatCurrencyFCFA(c.targetAmount)}</span>
                   </div>
                   <ProgressBar value={c.collectedAmount} max={c.targetAmount} color={pct >= 100 ? '#16a34a' : undefined} />
                   <div style={{ fontSize: '0.75rem', color: 'var(--color-neutral-500)', marginTop: '0.25rem' }}>{pct.toFixed(0)}% - Resp: {c.manager}</div>
@@ -115,8 +115,8 @@ function CollectionDetail({ collection, onClose }: { collection: FinanceCollecti
       <div className="sol-info-row"><span className="sol-info-label">Période</span><span className="sol-info-value">{new Date(collection.startDate).toLocaleDateString('fr-FR')} - {new Date(collection.endDate).toLocaleDateString('fr-FR')}</span></div>
       <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-          <span style={{ fontWeight: 700, color: 'var(--color-primary-600)' }}>{formatMoney(collection.collectedAmount)}</span>
-          <span style={{ color: 'var(--color-neutral-500)' }}>/ {formatMoney(collection.targetAmount)}</span>
+          <span style={{ fontWeight: 700, color: 'var(--color-primary-600)' }}>{formatCurrencyFCFA(collection.collectedAmount)}</span>
+          <span style={{ color: 'var(--color-neutral-500)' }}>/ {formatCurrencyFCFA(collection.targetAmount)}</span>
         </div>
         <ProgressBar value={collection.collectedAmount} max={collection.targetAmount} color={pct >= 100 ? '#16a34a' : undefined} />
         <div style={{ fontSize: '0.8rem', color: 'var(--color-neutral-500)', marginTop: '0.25rem' }}>{pct.toFixed(0)}% de l'objectif</div>
@@ -127,7 +127,7 @@ function CollectionDetail({ collection, onClose }: { collection: FinanceCollecti
           {collection.contributors.map((c, i) => (
             <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem', background: 'var(--color-neutral-50)', borderRadius: 'var(--radius-sm)', marginBottom: '0.25rem' }}>
               <span style={{ fontSize: '0.85rem' }}>{c.name}</span>
-              <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{formatMoney(c.amount)}</span>
+              <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{formatCurrencyFCFA(c.amount)}</span>
             </div>
           ))}
         </div>

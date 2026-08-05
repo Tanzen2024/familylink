@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Search, TrendingUp } from 'lucide-react'
 import { mockIncomes } from '../mockData'
-import { IncomeOriginBadge, formatMoney, EmptyState, KpiCard } from '../ui'
+import { IncomeOriginBadge, formatCurrencyFCFA, EmptyState, KpiCard } from '../ui'
 import type { IncomeOrigin } from '../types'
 
 const ORIGINS: IncomeOrigin[] = ['Cotisations', 'Dons', 'Collectes', 'Subventions', 'Revenus des projets', 'Autres recettes']
@@ -30,13 +30,13 @@ export default function Recettes() {
         </div>
       </div>
 
-      <div className="grid-3" style={{ marginBottom: '1.5rem' }}>
+      <div className="kpi-grid" style={{ marginBottom: '1.5rem' }}>
         {ORIGINS.map((origin) => (
           <KpiCard
             key={origin}
             icon={TrendingUp}
             label={origin}
-            value={formatMoney(byOrigin[origin] || 0)}
+            value={formatCurrencyFCFA(byOrigin[origin] || 0)}
             bg="#d1fae5"
             color="#065f46"
             onClick={() => setFOrigin(fOrigin === origin ? '' : origin)}
@@ -61,7 +61,7 @@ export default function Recettes() {
         <div className="sol-chart sol-chart-flush">
           <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--color-neutral-200)', fontWeight: 600, fontSize: '0.9rem', display: 'flex', justifyContent: 'space-between' }}>
             <span>{filtered.length} recette(s)</span>
-            <span style={{ color: '#065f46' }}>Total: {formatMoney(total)}</span>
+            <span style={{ color: '#065f46' }}>Total: {formatCurrencyFCFA(total)}</span>
           </div>
           <table className="sol-table">
             <thead><tr><th>Référence</th><th>Origine</th><th>Description</th><th>Montant</th><th>Date</th><th>Compte</th></tr></thead>
@@ -71,7 +71,7 @@ export default function Recettes() {
                   <td style={{ fontWeight: 600, fontSize: '0.8rem' }}>{i.reference}</td>
                   <td><IncomeOriginBadge origin={i.origin} /></td>
                   <td style={{ fontWeight: 500 }}>{i.description}</td>
-                  <td style={{ fontWeight: 700, color: '#065f46' }}>{formatMoney(i.amount)}</td>
+                  <td style={{ fontWeight: 700, color: '#065f46' }}>{formatCurrencyFCFA(i.amount)}</td>
                   <td>{new Date(i.date).toLocaleDateString('fr-FR')}</td>
                   <td style={{ fontSize: '0.8rem', color: 'var(--color-neutral-500)' }}>{i.account}</td>
                 </tr>
