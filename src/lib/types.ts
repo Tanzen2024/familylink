@@ -37,6 +37,10 @@ export interface EventItem {
   event_date: string | null
   photo_url: string | null
   video_url: string | null
+  video_name?: string | null
+  video_size?: number | null
+  video_mime_type?: string | null
+  video_thumbnail_url?: string | null
   location: string | null
   created_at?: string
 }
@@ -47,6 +51,10 @@ export interface NewsItem {
   content: string
   photo_url: string | null
   video_url: string | null
+  video_name?: string | null
+  video_size?: number | null
+  video_mime_type?: string | null
+  video_thumbnail_url?: string | null
   published_at: string
   created_at?: string
 }

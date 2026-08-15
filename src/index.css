@@ -1110,6 +1110,64 @@ button:focus-visible,
   background: var(--color-neutral-100);
 }
 
+.video-cover {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: var(--color-neutral-100);
+}
+
+.video-cover-button {
+  display: block;
+  padding: 0;
+  margin: 0;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.video-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.video-cover-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--color-neutral-400);
+  font-size: 0.8125rem;
+  background: var(--color-neutral-100);
+}
+
+.video-cover-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-full);
+  background: rgba(17, 24, 21, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  pointer-events: none;
+  transition: background var(--transition-fast);
+}
+
+.event-card:hover .video-cover-play,
+.news-card:hover .video-cover-play {
+  background: var(--color-primary-500);
+}
+
 .event-card-body,
 .news-card-body {
   padding: 1.25rem;
@@ -1150,7 +1208,8 @@ button:focus-visible,
   border-color: var(--color-neutral-300);
 }
 
-.events-page .event-card-photo {
+.events-page .event-card-photo,
+.events-page .video-cover {
   height: 240px;
 }
 
@@ -1206,7 +1265,8 @@ button:focus-visible,
 
 /* ===== Actualités (scoped to .news-page) ===== */
 
-.news-page .news-card-photo {
+.news-page .news-card-photo,
+.news-page .video-cover {
   height: 240px;
 }
 
@@ -1751,6 +1811,113 @@ button:focus-visible,
   width: 100%;
   display: block;
   border-radius: var(--radius-md);
+}
+
+.video-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.video-upload-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  width: 100%;
+  padding: 2rem 1rem;
+  border: 1.5px dashed var(--color-neutral-300);
+  border-radius: var(--radius-md);
+  background: var(--color-neutral-50);
+  color: var(--color-neutral-500);
+  cursor: pointer;
+  transition: border-color var(--transition), color var(--transition), background var(--transition);
+}
+
+.video-upload-dropzone:hover {
+  border-color: var(--color-primary-400);
+  color: var(--color-primary-600);
+  background: var(--color-primary-50);
+}
+
+.video-upload-dropzone-title {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-neutral-700);
+}
+
+.video-upload-dropzone-hint {
+  font-size: 0.8125rem;
+  color: var(--color-neutral-500);
+}
+
+.video-upload-file {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.875rem;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-md);
+  background: var(--color-neutral-50);
+}
+
+.video-upload-file-info {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  color: var(--color-neutral-700);
+}
+
+.video-upload-file-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-neutral-800);
+  word-break: break-all;
+}
+
+.video-upload-file-size {
+  font-size: 0.8125rem;
+  color: var(--color-neutral-500);
+}
+
+.video-upload-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.video-upload-progress-box {
+  padding: 0.875rem;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-md);
+  background: var(--color-neutral-50);
+}
+
+.video-upload-progress-label {
+  font-size: 0.875rem;
+  color: var(--color-neutral-700);
+  margin-bottom: 0.5rem;
+}
+
+.video-upload-progress-pct {
+  font-size: 0.8125rem;
+  color: var(--color-neutral-500);
+  margin-top: 0.375rem;
+}
+
+.video-upload-success {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+  color: var(--color-success-500);
+  font-weight: 500;
+}
+
+.video-upload-success-muted {
+  color: var(--color-neutral-500);
+  font-weight: 400;
 }
 
 /* ===== Solidarité Module ===== */

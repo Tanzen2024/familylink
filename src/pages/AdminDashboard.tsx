@@ -13,6 +13,7 @@ import {
 import { supabase } from '../lib/supabase'
 import type { Member, Family, EventItem, NewsItem, GalleryItem } from '../lib/types'
 import PhotoUpload from '../components/PhotoUpload'
+import VideoUploader, { type VideoValue } from '../components/VideoUploader'
 
 type Tab = 'members' | 'families' | 'events' | 'news' | 'gallery'
 
@@ -485,14 +486,29 @@ function EventForm({ event, onClose, onSaved }: { event: EventItem | null; onClo
     description: event?.description ?? '',
     event_date: event?.event_date ? event.event_date.slice(0, 16) : '',
     photo_url: event?.photo_url ?? '',
-    video_url: event?.video_url ?? '',
     location: event?.location ?? '',
   })
+  const [video, setVideo] = useState<VideoValue | null>(
+    event?.video_url
+      ? {
+          url: event.video_url,
+          name: event.video_name ?? 'Vidéo de l’événement',
+          size: event.video_size ?? 0,
+          mimeType: event.video_mime_type ?? 'video/mp4',
+          thumbnailUrl: event.video_thumbnail_url ?? null,
+        }
+      : null
+  )
+  const [videoUploading, setVideoUploading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (videoUploading) {
+      setError("Veuillez patienter pendant l'importation de la vidéo.")
+      return
+    }
     setSaving(true)
     setError(null)
     const payload = {
@@ -500,7 +516,11 @@ function EventForm({ event, onClose, onSaved }: { event: EventItem | null; onClo
       description: form.description || null,
       event_date: form.event_date ? new Date(form.event_date).toISOString() : null,
       photo_url: form.photo_url || null,
-      video_url: form.video_url || null,
+      video_url: video?.url || null,
+      video_name: video?.name || null,
+      video_size: video?.size || null,
+      video_mime_type: video?.mimeType || null,
+      video_thumbnail_url: video?.thumbnailUrl || null,
       location: form.location || null,
     }
     const { error } = event
@@ -532,14 +552,19 @@ function EventForm({ event, onClose, onSaved }: { event: EventItem | null; onClo
           </div>
         </div>
         <PhotoUpload value={form.photo_url} onChange={(url) => setForm({ ...form, photo_url: url ?? '' })} label="Photo de l'événement" folder="events" />
-        <div className="form-group">
-          <label className="form-label">URL de la vidéo</label>
-          <input className="form-input" value={form.video_url} onChange={(e) => setForm({ ...form, video_url: e.target.value })} placeholder="https://…" />
-        </div>
+        <VideoUploader
+          value={video}
+          onChange={setVideo}
+          onUploadingChange={setVideoUploading}
+          label="Vidéo de l'événement"
+          folder="events"
+        />
         {error && <div className="form-error">{error}</div>}
         <div className="modal-footer">
           <button type="button" className="btn btn-secondary" onClick={onClose}>Annuler</button>
-          <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Enregistrement…' : 'Enregistrer'}</button>
+          <button type="submit" className="btn btn-primary" disabled={saving || videoUploading}>
+            {saving ? 'Enregistrement…' : videoUploading ? 'Importation de la vidéo…' : 'Enregistrer'}
+          </button>
         </div>
       </form>
     </Modal>
@@ -611,16 +636,40 @@ function NewsForm({ item, onClose, onSaved }: { item: NewsItem | null; onClose: 
     title: item?.title ?? '',
     content: item?.content ?? '',
     photo_url: item?.photo_url ?? '',
-    video_url: item?.video_url ?? '',
   })
+  const [video, setVideo] = useState<VideoValue | null>(
+    item?.video_url
+      ? {
+          url: item.video_url,
+          name: item.video_name ?? 'Vidéo de l’actualité',
+          size: item.video_size ?? 0,
+          mimeType: item.video_mime_type ?? 'video/mp4',
+          thumbnailUrl: item.video_thumbnail_url ?? null,
+        }
+      : null
+  )
+  const [videoUploading, setVideoUploading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (videoUploading) {
+      setError("Veuillez patienter pendant l'importation de la vidéo.")
+      return
+    }
     setSaving(true)
     setError(null)
-    const payload = { title: form.title, content: form.content, photo_url: form.photo_url || null, video_url: form.video_url || null }
+    const payload = {
+      title: form.title,
+      content: form.content,
+      photo_url: form.photo_url || null,
+      video_url: video?.url || null,
+      video_name: video?.name || null,
+      video_size: video?.size || null,
+      video_mime_type: video?.mimeType || null,
+      video_thumbnail_url: video?.thumbnailUrl || null,
+    }
     const { error } = item
       ? await supabase.from('news').update(payload).eq('id', item.id)
       : await supabase.from('news').insert(payload)
@@ -640,14 +689,19 @@ function NewsForm({ item, onClose, onSaved }: { item: NewsItem | null; onClose: 
           <textarea className="form-textarea" style={{ minHeight: '150px' }} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} required />
         </div>
         <PhotoUpload value={form.photo_url} onChange={(url) => setForm({ ...form, photo_url: url ?? '' })} label="Photo de l'actualité" folder="news" />
-        <div className="form-group">
-          <label className="form-label">URL de la vidéo</label>
-          <input className="form-input" value={form.video_url} onChange={(e) => setForm({ ...form, video_url: e.target.value })} placeholder="https://…" />
-        </div>
+        <VideoUploader
+          value={video}
+          onChange={setVideo}
+          onUploadingChange={setVideoUploading}
+          label="Vidéo de l'actualité"
+          folder="news"
+        />
         {error && <div className="form-error">{error}</div>}
         <div className="modal-footer">
           <button type="button" className="btn btn-secondary" onClick={onClose}>Annuler</button>
-          <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Enregistrement…' : 'Enregistrer'}</button>
+          <button type="submit" className="btn btn-primary" disabled={saving || videoUploading}>
+            {saving ? 'Enregistrement…' : videoUploading ? 'Importation de la vidéo…' : 'Enregistrer'}
+          </button>
         </div>
       </form>
     </Modal>

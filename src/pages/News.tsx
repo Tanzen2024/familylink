@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { CalendarDays, Video, Newspaper } from 'lucide-react'
+import { CalendarDays, Video, Newspaper, Play } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import type { NewsItem } from '../lib/types'
 
@@ -54,7 +54,23 @@ export default function News() {
         <div className="grid-2">
           {news.map((n) => (
             <div key={n.id} className="card news-card" style={{ cursor: 'pointer' }} onClick={() => setSelected(n)}>
-              {n.photo_url && <img src={n.photo_url} alt={n.title} className="news-card-photo" />}
+              {n.photo_url ? (
+                <img src={n.photo_url} alt={n.title} className="news-card-photo" />
+              ) : n.video_url ? (
+                <div className="video-cover">
+                  {n.video_thumbnail_url ? (
+                    <img src={n.video_thumbnail_url} alt={`Aperçu vidéo de ${n.title}`} className="video-cover-img" />
+                  ) : (
+                    <div className="video-cover-fallback">
+                      <Video size={26} strokeWidth={1.5} />
+                      <span>Aperçu vidéo</span>
+                    </div>
+                  )}
+                  <span className="video-cover-play" aria-hidden="true">
+                    <Play size={20} fill="white" />
+                  </span>
+                </div>
+              ) : null}
               <div className="news-card-body">
                 <div className="news-date">
                   <CalendarDays size={13} />
